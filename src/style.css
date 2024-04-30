@@ -45,12 +45,19 @@
     padding: 1.5vh;
     margin-bottom: 1.5rem;
 }
+
+.model-input {
+    margin-top: 1.5rem;
+    font-size: medium;
+}
+
 .graph-container{
     width: auto;
     height: 35%;
     border-radius: 5px;
     background-color: #363F44;
     padding: 1.5vh;
+    margin-top: 1rem;
     margin-bottom: 1.5rem;
     overflow-y: auto;
 }
