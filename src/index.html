@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>ABCV WebGL</title>
+        <link href = "style.css" rel = "stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="toolbar-left">
+            <h2 class="title">ABCV 3D WebGL</h1>
+            <button id="load" class="load-button">Load Model</button>
+            <div class="graph-container">
+                <p>test</p>
+            </div>
+            <div class="camera-settings-container">
+                <h2 class="category-title">Camera</h2>
+                <div class="camera-proj-radius-container">
+                    <select name="camera-proj" id="camera-proj">
+                        <option value="orthographic">Orthographic</option>
+                        <option value="oblique">Oblique</option>
+                        <option value="perspective">Perspective</option>
+                    </select>
+                    <div class="radius-input-container">
+                        <h3 class="sub-category-title">Radius</h3>
+                        <input type="range" min="0" max="100" step="5" value="0" class="radius-slider" id="radius-slider">
+                    </div>
+                </div>
+                <button id="reset-camera-button" class="reset-camera-button">Reset camera</button>
+            </div>
+            <div class="material-settings-container">
+                <h2 class="category-title">Material</h2>
+                <div class="material-buttons">
+                    <div class="material-button-container">
+                        <input type="radio" id="basic-button" name="material" value="basic" class="radio-button">
+                        <label for="basic-button" class="radio-label">Basic</label><br>
+                    </div>
+                    <div class="material-button-container">
+                        <input type="radio" id="phong-button" name="material" value="phong" class="radio-button">
+                        <label for="phong-button" class="radio-label">Phong</label><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-right">
+            <div class = "canvas-container">
+                <canvas id="gl-canvas" class="canvas"></canvas>
+            </div>
+            <div class="toolbar-bottom">
+                <div class="animation-controller">
+                    <h2 class="category-title">Animation</h2>
+                    <button id="play-pause-button" class="play-pause-button">Play animation</button>
+                    <div class="fps-input-container">
+                        <input type="number" id="fps-input" name="fps-input" class="fps-input" value="30">
+                        <label for="fps-input" class="radio-label">FPS</label><br>
+                    </div>
+                    <input type="range" min="0" max="30" step="1" value="0" class="animation-slider" id="animation-slider">
+                    <input type="checkbox" id="auto-replay" name="auto-replay" value="true">Auto-replay</input>
+                </div>
+                <div class="transformation-controller">
+                    <h2 class="category-title">Transform</h2>
+                    <div class="transformation-container">
+                        <div class="transformation-type-container">
+                            <h3 class="sub-category-title">Translation</h3>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">X</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-x-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Y</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-y-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Z</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-z-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                        </div>
+                        <div class="transformation-type-container">
+                            <h3 class="sub-category-title">Rotation</h3>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">X</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="rotation-x-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Y</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="rotation-y-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Z</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="rotation-z-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                        </div>
+                        <div class="transformation-type-container">
+                            <h3 class="sub-category-title">Scale</h3>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">X</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="scale-x-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Y</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="scale-y-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                            <div class="transformation-input-container">
+                                <p class="transformation-label">Z</p>
+                                <p class="transformation-label">-100</p>
+                                <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="scale-z-slider">
+                                <p class="transformation-label">100</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
