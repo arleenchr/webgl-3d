@@ -19,7 +19,7 @@ function createShader(gl, type, source){
     return shader;
 }
 
-function createProgram(gl, vertexShader, fragmentShader){
+function createProgram(gl, vertexShaderText, fragmentShaderText){
     const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vertexShaderText);
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText);
     const program = gl.createProgram();
