@@ -30,13 +30,17 @@
             </div>
             <div class="material-settings-container">
                 <h2 class="category-title">Material</h2>
-                <div class="material-buttons">
+                <div class="material-buttons" id="material-input">
+                    <div class="material-button-container" >
+                        <input type="radio" id="normal-button" name="material" value="Normal" class="radio-button" checked>
+                        <label for="basic-button" class="radio-label">Normal</label><br>
+                    </div>
                     <div class="material-button-container">
-                        <input type="radio" id="basic-button" name="material" value="basic" class="radio-button">
+                        <input type="radio" id="basic-button" name="material" value="Basic" class="radio-button">
                         <label for="basic-button" class="radio-label">Basic</label><br>
                     </div>
                     <div class="material-button-container">
-                        <input type="radio" id="phong-button" name="material" value="phong" class="radio-button">
+                        <input type="radio" id="phong-button" name="material" value="Phong" class="radio-button">
                         <label for="phong-button" class="radio-label">Phong</label><br>
                     </div>
                 </div>
