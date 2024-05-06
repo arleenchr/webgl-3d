@@ -31,6 +31,38 @@ void main(void) {
 }
 `;
 
+const fragment_shader_3d = `
+precision mediump float;
+
+varying vec4 vNormal;
+varying float colorFactor;
+
+uniform vec4 userColor;
+uniform vec3 uReverseLightDirection;
+
+void main(void) {
+    float light = dot(vNormal.xyz, uReverseLightDirection);
+    gl_FragColor =userColor;
+    //add the ambience light
+    gl_FragColor.rgb *= (light);
+}
+`;
+const fragment_shader_phong = `
+precision mediump float;
+
+varying vec4 vNormal;
+varying float colorFactor;
+
+uniform vec4 userColor;
+uniform vec3 uReverseLightDirection;
+
+void main(void) {
+    float light = dot(vNormal.xyz, uReverseLightDirection);
+    gl_FragColor = userColor;
+    //add the ambience light
+    gl_FragColor.rgb *= (light);
+}
+`
 const fragment_shader = `
 precision mediump float;
 varying vec4 fragColor;
