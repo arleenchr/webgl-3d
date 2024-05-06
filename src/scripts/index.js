@@ -28,7 +28,8 @@ const setInitialState = () => {
         },
         projection: "oblique", // Default
         phi: 10.0, 
-        theta: 5.0
+        theta: 5.0,
+        material: "Normal",
     }
 }
 
@@ -48,6 +49,8 @@ const rotateZ = document.getElementById('rotation-z-slider');
 const scaleX = document.getElementById('scale-x-slider');
 const scaleY = document.getElementById('scale-y-slider');
 const scaleZ = document.getElementById('scale-z-slider');
+
+const materialRadio = document.getElementsByName('material');
 
 var program = createProgram(gl, vertex_shader, fragment_shader);
 
@@ -79,7 +82,6 @@ const renderModel = () => {
 
     console.log("View: ", view);
     console.log("Projection: ", projection);
-
     // Set the transformation matrix uniform
     const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
     gl.uniformMatrix4fv(uTransform, false, transform);
@@ -87,6 +89,41 @@ const renderModel = () => {
     // Set the projection matrix uniform
     const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
     gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+
+
+    // Calculate normal matrix
+    var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
+    let modelMatrix = matrices.multiply(view, transform);
+    let nMatrix = matrices.inverse(modelMatrix);
+    nMatrix = matrices.transpose(nMatrix);
+
+    gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
+
+    // Set material of model
+    if(state.material == "Normal"){
+        setColor(gl, state.model);
+        const vertColor = gl.getAttribLocation(program, "aColor");
+        gl.enableVertexAttribArray(vertColor);
+        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+    }
+    else if(state.material == "Basic"){
+        console.log("ini basicccccc")
+
+        var userColor = gl.getUniformLocation(program, "userColor");
+        gl.uniform4fv(userColor, [1,0,0,1]);
+
+        var reverseLightDirectionLocation = gl.getUniformLocation(
+        program,
+        "uReverseLightDirection"
+        );
+
+        normalizeLight = matrices.normalize([0.5, 0.7, 1]);
+        console.log("Normalize Light: ", normalizeLight)
+        gl.uniform3fv(
+            reverseLightDirectionLocation,
+            matrices.normalize(normalizeLight)
+        );
+    }
 
     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
 }
@@ -272,6 +309,14 @@ const setProjectionMat = (proj, far, near, theta, phi) => {
     }
 }
 
+/* Set Color */
+function setColor(gl, model) {
+    const colorBuffer = gl.createBuffer();
+    const color = new Float32Array(model.colors.flat(1));
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, color, gl.STATIC_DRAW);
+}
+
 /* Translate X */
 transX.addEventListener('input', () => {
     state.transform.translate[0] = transX.value / 100;
@@ -324,6 +369,23 @@ scaleY.addEventListener('input', () => {
 scaleZ.addEventListener('input', () => {
     state.transform.scale[2] = scaleZ.value;
     renderModel();
+})
+
+/* Material */
+materialRadio.forEach((radio) => {
+    radio.addEventListener('change', () => {
+        state.material = radio.value;
+        console.log("Material: ", state.material);
+        if(state.material == "Normal"){
+            // renderModel();
+            program = createProgram(gl,vertex_shader, fragment_shader)
+        }
+        else if(state.material == "Basic"){
+            console.log("ini basicc material")
+            program = createProgram(gl,vertex_shader, fragment_shader_3d);
+        }
+        renderModel();
+    })
 })
 
 window.onload = () => {
