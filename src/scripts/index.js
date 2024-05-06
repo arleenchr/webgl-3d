@@ -290,6 +290,42 @@ transZ.addEventListener('input', () => {
     renderModel();
 })
 
+/* Rotate X */
+rotateX.addEventListener('input', () => {
+    state.transform.rotate[0] = (rotateX.value * 4 * Math.PI) / 100;
+    renderModel();
+})
+
+/* Rotate Y */
+rotateY.addEventListener('input', () => {
+    state.transform.rotate[1] = (rotateY.value * 4 * Math.PI) / 100;
+    renderModel();
+})
+
+/* Rotate Z */
+rotateZ.addEventListener('input', () => {
+    state.transform.rotate[2] = (rotateZ.value * 4 * Math.PI) / 100;
+    renderModel();
+})
+
+/* Scale X */
+scaleX.addEventListener('input', () => {
+    state.transform.scale[0] = scaleX.value;
+    renderModel();
+})
+
+/* Scale Y */
+scaleY.addEventListener('input', () => {
+    state.transform.scale[1] = scaleY.value;
+    renderModel();
+})
+
+/* Scale Z */
+scaleZ.addEventListener('input', () => {
+    state.transform.scale[2] = scaleZ.value;
+    renderModel();
+})
+
 window.onload = () => {
     if (!gl) {
         alert("WebGL not available!");
