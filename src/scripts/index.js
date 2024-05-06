@@ -274,37 +274,37 @@ const setProjectionMat = (proj, far, near, theta, phi) => {
 
 /* Translate X */
 transX.addEventListener('input', () => {
-    state.transform.translate[0] = -1 + (transX.value * 2) / 100;
+    state.transform.translate[0] = transX.value / 100;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
-    state.transform.translate[1] = -1 + (transY.value * 2) / 100;
+    state.transform.translate[1] = transY.value / 100;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
-    state.transform.translate[2] = -1 + (transZ.value * 2) / 100;
+    state.transform.translate[2] = -transZ.value / 100;
     renderModel();
 })
 
 /* Rotate X */
 rotateX.addEventListener('input', () => {
-    state.transform.rotate[0] = (rotateX.value * 4 * Math.PI) / 100;
+    state.transform.rotate[0] = (rotateX.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Y */
 rotateY.addEventListener('input', () => {
-    state.transform.rotate[1] = (rotateY.value * 4 * Math.PI) / 100;
+    state.transform.rotate[1] = (rotateY.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Z */
 rotateZ.addEventListener('input', () => {
-    state.transform.rotate[2] = (rotateZ.value * 4 * Math.PI) / 100;
+    state.transform.rotate[2] = (rotateZ.value * Math.PI) / 100;
     renderModel();
 })
 
