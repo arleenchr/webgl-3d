@@ -37,6 +37,18 @@ setInitialState();
 var canvas = document.querySelector("#gl-canvas")
 const modelInput = document.getElementById("modelFile");
 
+const transX = document.getElementById('translation-x-slider');
+const transY = document.getElementById('translation-y-slider');
+const transZ = document.getElementById('translation-z-slider');
+
+const rotateX = document.getElementById('rotation-x-slider');
+const rotateY = document.getElementById('rotation-y-slider');
+const rotateZ = document.getElementById('rotation-z-slider');
+
+const scaleX = document.getElementById('scale-x-slider');
+const scaleY = document.getElementById('scale-y-slider');
+const scaleZ = document.getElementById('scale-z-slider');
+
 var program = createProgram(gl, vertex_shader, fragment_shader);
 
 const renderModel = () => {
@@ -259,6 +271,24 @@ const setProjectionMat = (proj, far, near, theta, phi) => {
         return matrices.perspective(fovy, aspect, near, far);
     }
 }
+
+/* Translate X */
+transX.addEventListener('input', () => {
+    state.transform.translate[0] = -1 + (transX.value * 2) / 100;
+    renderModel();
+})
+
+/* Translate Y */
+transY.addEventListener('input', () => {
+    state.transform.translate[1] = -1 + (transY.value * 2) / 100;
+    renderModel();
+})
+
+/* Translate Z */
+transZ.addEventListener('input', () => {
+    state.transform.translate[2] = -1 + (transZ.value * 2) / 100;
+    renderModel();
+})
 
 window.onload = () => {
     if (!gl) {
