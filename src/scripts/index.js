@@ -26,9 +26,10 @@ const setInitialState = () => {
             near: 0.1,
             far: 50,
         },
-        projection: "oblique", // Default
+        projection: "orthographic", // Default
         phi: 10.0, 
-        theta: 5.0
+        theta: 5.0,
+        radius: 1.0,
     }
 }
 
@@ -48,6 +49,12 @@ const rotateZ = document.getElementById('rotation-z-slider');
 const scaleX = document.getElementById('scale-x-slider');
 const scaleY = document.getElementById('scale-y-slider');
 const scaleZ = document.getElementById('scale-z-slider');
+
+const cameraProjection = document.getElementById('camera-proj');
+
+const cameraRadius = document.getElementById('radius-slider');
+
+const resetCamera = document.getElementById('reset-camera-button');
 
 var program = createProgram(gl, vertex_shader, fragment_shader);
 
@@ -75,7 +82,7 @@ const renderModel = () => {
     const transform = setTransformMat(state.model, state.transform);
 
     // Set up the projection matrix
-    const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi);
+    const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
 
     console.log("View: ", view);
     console.log("Projection: ", projection);
@@ -87,6 +94,11 @@ const renderModel = () => {
     // Set the projection matrix uniform
     const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
     gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+
+    setColor(gl, state.model);
+    var vertColor = gl.getAttribLocation(program, "aColor");
+    gl.enableVertexAttribArray(vertColor);
+    gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
 }
@@ -246,7 +258,7 @@ const setTransformMat = (model, transform) => {
     return matTransform;
 }
 
-const setProjectionMat = (proj, far, near, theta, phi) => {
+const setProjectionMat = (proj, far, near, theta, phi, radius) => {
     const left = -2;
     const right = 2;
     const top = 2;
@@ -259,17 +271,29 @@ const setProjectionMat = (proj, far, near, theta, phi) => {
     let nearOrthogonal = -farOrthogonal;
   
     // Oblique Projection
-    if (proj === "oblique") { 
-        return matrices.multiply(matrices.oblique(theta, phi), matrices.orthographic(left, right, bottom, top, nearOrthogonal, farOrthogonal));
+    if (proj === "oblique") {
+        orthoMatrices = matrices.orthographic(left, right, bottom, top, nearOrthogonal, farOrthogonal);
+        obliqueMatrices = matrices.oblique(phi, theta, orthoMatrices);
+
+        return matrices.multiply(matrices.scale(1/radius, 1/radius, 1/radius), obliqueMatrices);
     } 
     // Orthographic Projection
-    else if (proj === "orthographic") { 
-        return matrices.orthographic(left, right, bottom, top, nearOrthogonal, farOrthogonal);
+    else if (proj === "orthographic") {
+        orthoMatrices = matrices.orthographic(left, right, bottom, top, nearOrthogonal, farOrthogonal);
+
+        return matrices.multiply(matrices.scale(1/radius, 1/radius, 1/radius), orthoMatrices);
     } 
     // Perspective Projection
     else {
         return matrices.perspective(fovy, aspect, near, far);
     }
+}
+
+const setColor = (gl, model) => {
+    const colorBuffer = gl.createBuffer();
+    const colors = new Float32Array(model.colors.flat(1));
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 }
 
 /* Translate X */
@@ -323,6 +347,39 @@ scaleY.addEventListener('input', () => {
 /* Scale Z */
 scaleZ.addEventListener('input', () => {
     state.transform.scale[2] = scaleZ.value;
+    renderModel();
+})
+
+/* Change Projection */
+cameraProjection.addEventListener('change', () => {
+    state.projection = cameraProjection.value;
+    renderModel();
+})
+
+/* Change Camera Radius */
+cameraRadius.addEventListener('input', () => {
+    if (state.projection === "perspective") {
+        state.viewMatrix.camera[2] = 1 + cameraRadius.value / 100;
+    }
+    else {
+        state.radius = 1 + cameraRadius.value / 100;
+    }
+    renderModel();
+})
+
+/* Reset Camera */
+resetCamera.addEventListener('click', () => {
+    if (state.projection === "perspective") {
+        state.viewMatrix.camera[2] = 1;
+    }
+    else {
+        state.radius = 1;
+    }
+
+    cameraRadius.value = 0;
+    state.projection = "orthographic";
+    cameraProjection.value = "orthographic";
+    
     renderModel();
 })
 

@@ -234,9 +234,12 @@ var matrices = {
     // Projections
     perspective: (fieldViewRad, aspect, near, far) => {
         var f = Math.tan(Math.PI * 0.5 - fieldViewRad * 0.5);
+        var top = near * Math.tan(fieldViewRad * 0.5);
+        var right = top * aspect;
+
         mat = [
-            f / aspect, 0, 0, 0,
-            0, f, 0, 0,
+            near / right, 0, 0, 0,
+            0, near / top, 0, 0,
             0, 0, (near + far) * (1.0 / (near - far)), -1,
             0, 0, near * far * (1.0 / (near - far)) * 2, 0,
         ];
@@ -263,18 +266,31 @@ var matrices = {
         return mat;
     },
 
-    oblique: (degTheta, phi) => {
+    oblique: (degTheta, phi, prevOrthoMatrices) => {
         let cotanP = -1 / Math.tan(degreesToRadian(phi));
         let cotanT = -1 / Math.tan(degreesToRadian(degTheta));
 
-        mat = [
+        shearMatrices = [
             1, 0, 0, 0, 
             0, 1, 0, 0, 
             cotanT, cotanP, 1, 0, 
             0, 0, 0, 1
         ];
 
-        return mat;
+        orthoMatrices = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 1
+        ];
+
+        firstMulResult = matrices.multiply(
+            shearMatrices, prevOrthoMatrices);
+
+        mat = matrices.multiply(
+            firstMulResult, orthoMatrices);
+
+        return firstMulResult;
     },
 };
   
