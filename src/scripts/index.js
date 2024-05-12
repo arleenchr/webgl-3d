@@ -38,6 +38,7 @@ setInitialState();
 
 var canvas = document.querySelector("#gl-canvas")
 const modelInput = document.getElementById("modelFile");
+const colorCheckbox = document.getElementById("color-button");
 
 const transX = document.getElementById('translation-x-slider');
 const transY = document.getElementById('translation-y-slider');
@@ -62,8 +63,6 @@ const resetCamera = document.getElementById('reset-camera-button');
 let mouseDown = false;
 let lastMouseX = null;
 let lastMouseY = null;
-
-
 
 
 var program = createProgram(gl, vertex_shader, fragment_shader);
@@ -149,6 +148,9 @@ modelInput.addEventListener("change", () => {
     // Check file extension
     if (file.type !== "application/json") {
         alert("Wrong file extension! Please upload a file with JSON extension!");
+
+        // Disable the color checkbox
+        document.getElementById('color-button').disabled = true;
         return;
     }
   
@@ -170,9 +172,35 @@ modelInput.addEventListener("change", () => {
         // console.log("Test HOHO", state.model);
         state.chosenColor = color;
 
+        // Enable or disable the checkbox
+        if (state.model.vertices.length > 0) {
+            document.getElementById('color-button').disabled = false;
+        } else {
+            document.getElementById('color-button').disabled = true;
+        }
+
         renderModel();
     };
     reader.readAsText(file);    
+});
+
+colorCheckbox.addEventListener("change", () => {
+    console.log(state.model.colors);
+    if (colorCheckbox.checked) {
+        // Render with the color from the file
+        var event = new Event('change');
+        modelInput.dispatchEvent(event);
+    } else {
+        savedColor = state.model.colors;
+        // Change color to gray
+        for (let i = 0; i < state.model.colors.length; i++) {
+            // Calculate the average of the RGB values to get a gray color
+            let avgColor = (state.model.colors[i][0] + state.model.colors[i][1] + state.model.colors[i][2]) / 3;
+            state.model.colors[i] = [avgColor, avgColor, avgColor];
+        }
+        
+        renderModel();
+    }
 });
 
 const setViewMat = (viewMat) => {
