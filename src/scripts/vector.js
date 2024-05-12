@@ -47,7 +47,7 @@ var vectors = {
             crossVec.push(v1.x * v2.y - v1.y * v2.x);
         
             // Normalize
-            let vectorLen = this.calculateDistance(crossVec);
+            let vectorLen = vectors.calculateDistance(crossVec);
             crossLength = crossVec.length
             for (let i = 0; i < crossLength; i++) {
                 if (!crossVec[i]) {
@@ -62,3 +62,5 @@ var vectors = {
         return normal;
     }
 }
+
+module.exports = vectors;
