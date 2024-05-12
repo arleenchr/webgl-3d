@@ -59,6 +59,13 @@ const cameraRadius = document.getElementById('radius-slider');
 
 const resetCamera = document.getElementById('reset-camera-button');
 
+let mouseDown = false;
+let lastMouseX = null;
+let lastMouseY = null;
+
+
+
+
 var program = createProgram(gl, vertex_shader, fragment_shader);
 
 const renderModel = () => {
@@ -431,6 +438,39 @@ resetCamera.addEventListener('click', () => {
     
     renderModel();
 })
+
+/* Rotate Camera with Mouse */
+canvas.onmousedown = function(event) {
+    mouseDown = true;
+    currentX = event.clientX;
+    currentY = event.clientY;
+};
+
+canvas.onmouseup = function(event) {
+    mouseDown = false;
+};
+
+canvas.onmousemove = function(event) {
+    if (!mouseDown) {
+        return;
+    }
+    let previousX = currentX;
+    let previousY = currentY;
+
+    currentX = event.clientX;
+    currentY = event.clientY;
+
+    let deltaX = currentX - previousX;
+    let deltaY = currentY - previousY;
+    state.transform.rotate[1] += (deltaX * 5 * Math.PI) / 100;
+    state.transform.rotate[0] += (deltaY * 5 * Math.PI) / 100;
+
+    previousX = currentX;
+    previousY = currentY;
+
+    renderModel();
+};
+
 
 window.onload = () => {
     if (!gl) {
