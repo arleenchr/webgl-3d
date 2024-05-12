@@ -110,6 +110,10 @@
     color: white;
 }
 
+.color-checkbox {
+    margin-top: 1rem;
+}
+
 .container-right{
     display: flex;
     flex-direction: column;
