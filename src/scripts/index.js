@@ -417,6 +417,55 @@ scaleZ.addEventListener('input', () => {
     renderModel();
 })
 
+let gravityFeature = false;
+let shiftVal = 5;
+
+// Model Controller using Keyboard
+window.addEventListener('keydown', function(event) {
+    switch (event.key) {
+        case "ArrowLeft":
+            if (transX.value > -100) {
+                transX.value = Math.max(parseInt(transX.value) - shiftVal, -100);
+                state.transform.translate[0] = transX.value / 100;
+                renderModel();
+            }
+            break;
+        case "ArrowRight":
+            if (transX.value < 100) {
+                transX.value = Math.min(parseInt(transX.value) + shiftVal, 100);
+                state.transform.translate[0] = transX.value / 100;
+                renderModel();
+            }
+            break;
+        case "ArrowUp":
+            if (!gravityFeature) {
+                if (transY.value < 100) {
+                    transY.value = Math.min(parseInt(transY.value) + shiftVal, 100);
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }
+            } else {
+                console.log("Gravity Exists");
+                // TO BE IMPLEMENTED   
+            }
+            break;
+        case "ArrowDown": 
+            if (!gravityFeature) {
+                if (transY.value > -100) {
+                    transY.value = Math.max(parseInt(transY.value) - shiftVal, -100);
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }
+            } else {
+                console.log("Gravity Exists");
+            }
+            break;
+        case "G": // Activate or Deactivate Gravity Feature
+            gravityFeature = !gravityFeature;
+            break;
+    }
+}, true);
+
 /* Material */
 materialRadio.forEach((radio) => {
     radio.addEventListener('change', () => {
