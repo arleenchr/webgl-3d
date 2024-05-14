@@ -419,8 +419,10 @@ scaleZ.addEventListener('input', () => {
 
 let gravityFeature = false;
 let shiftVal = 5;
+let jumpHeight = 30;
+let gravity = 9.8;
 
-// Model Controller using Keyboard
+// Model Controller using Keyboard + Simple Physics Engine
 window.addEventListener('keydown', function(event) {
     switch (event.key) {
         case "ArrowLeft":
@@ -446,7 +448,28 @@ window.addEventListener('keydown', function(event) {
                 }
             } else {
                 console.log("Gravity Exists");
-                // TO BE IMPLEMENTED   
+
+                // Jumping
+                let time = 0;
+                let velocity = Math.sqrt(2 * gravity * jumpHeight);
+                let jumpInterval = setInterval(function() {
+                    time += 1/60; // Increment time
+                    velocity -= gravity * time; // Update velocity based on gravity
+                    transY.value += velocity; // Update position based on velocity
+
+                    if (transY.value <= 0) { // When the object has landed
+                        transY.value = 0;
+                        time = 0; // Reset time
+                    }
+
+                    if (velocity <= 0 && transY.value <= 0.01) { // Clear interval and reset velocity when object has landed
+                        clearInterval(jumpInterval);
+                        velocity = Math.sqrt(2 * gravity * jumpHeight); 
+                    }
+
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }, 1000/60); // Render 60 times per second
             }
             break;
         case "ArrowDown": 
