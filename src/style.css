@@ -111,7 +111,7 @@
 }
 
 .color-checkbox {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
 }
 
 .container-right{
@@ -119,6 +119,7 @@
     flex-direction: column;
     flex-grow: 1;
     width: 100%;
+    overflow-y: auto;
 }
 
 .canvas-container{
