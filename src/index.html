@@ -65,14 +65,14 @@
                     <h2 class="category-title">Animation</h2>
                     <button id="play-pause-button" class="play-pause-button">Play animation</button>
                     <div class="fps-input-container">
-                        <input type="number" id="fps-input" name="fps-input" class="fps-input" value="30">
+                        <input type="number" id="fps-input" name="fps-input" class="fps-input" value="3">
                         <label for="fps-input" class="radio-label">FPS</label><br>
                     </div>
                     <input type="range" min="0" max="10" step="1" value="0" class="animation-slider" id="animation-slider">
                     <input type="checkbox" id="auto-replay" name="auto-replay" value="true">Auto-replay</input>
                     <p class="reverse-label">Reverse</p>
                     <label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" id="reverse-toggle">
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -150,6 +150,7 @@
         <script src="scripts/vector.js"></script>
         <script src="scripts/matrix.js"></script>
         <script src="scripts/utils.js"></script>
+        <script src="scripts/animation.js"></script>
         <script src="scripts/index.js"></script>
     </body>
 </html>

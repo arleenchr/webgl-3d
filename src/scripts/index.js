@@ -573,6 +573,170 @@ canvas.onmousemove = function(event) {
     renderModel();
 };
 
+// ANIMATION
+const playPauseButton = document.getElementById('play-pause-button');
+const fpsInput = document.getElementById('fps-input');
+const autoReplayButton = document.getElementById('auto-replay');
+const animationSlider = document.getElementById('animation-slider');
+const reverseToggle = document.getElementById('reverse-toggle');
+
+let currentTime = 0;
+let animationSpeed = 1;
+let animationPaused = true;
+let desiredFPS = 3; // default
+let totalFrames = hollowOctahedronAnim.frames.length;
+let totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+let lastFrameTime = performance.now();
+let isReversed = false;
+
+animationSlider.max = totalFrames - 1;
+
+playPauseButton.addEventListener('click', toggleAnimation);
+fpsInput.addEventListener('input', function() {
+    desiredFPS = parseInt(this.value);
+    totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+    console.log(desiredFPS);
+});
+
+animationSlider.addEventListener('input', function() {
+    currentTime = animationSlider.value / desiredFPS;
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+    renderModel();
+    if (!animationPaused) {
+        lastFrameTime = performance.now();
+    }
+});
+
+reverseToggle.addEventListener('change', function() {
+    isReversed = reverseToggle.checked;
+    if (isReversed) {
+        animationSlider.value = totalFrames - 1;
+        currentTime = (totalFrames - 1) / desiredFPS;
+    } else {
+        animationSlider.value = 0;
+        currentTime = 0;
+    }
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+    renderModel();
+    console.log('Reverse animation:', isReversed);
+});
+
+function toggleAnimation() {
+    animationPaused = !animationPaused;
+    if (!animationPaused) {
+        lastFrameTime = performance.now(); // reset frame time on start
+        if (isReversed) {
+            animationSlider.value = totalFrames - 1;
+            currentTime = (totalFrames - 1) / desiredFPS;
+        }
+        animate();
+        playPauseButton.textContent = "Pause Animation";
+        console.log("playing animation");
+    } else {
+        playPauseButton.textContent = "Play Animation";
+        console.log("pausing animation");
+    }
+}
+
+function updateAnimationTime(deltaTime) {
+    const delta = deltaTime * animationSpeed;
+    if (isReversed) {
+        currentTime -= delta;
+        if (currentTime < 0) {
+            if (autoReplayButton.checked) {
+                currentTime += totalAnimationTime;
+            } else {
+                currentTime = 0;
+                animationPaused = true;
+                playPauseButton.textContent = "Play Animation";
+            }
+        }
+    } else {
+        currentTime += delta;
+        if (autoReplayButton.checked && totalAnimationTime !== 0) {
+            currentTime %= totalAnimationTime;
+        } else if (currentTime >= totalAnimationTime) {
+            // Animation finished
+            animationPaused = true;
+            playPauseButton.textContent = "Play Animation";
+            currentTime = 0; // reset time
+        }
+    }
+
+    animationSlider.value = Math.floor(currentTime * desiredFPS);
+}
+
+function lerp(a, b, t) {
+    return a * (1 - t) + b * t;
+}
+
+function interpolateKeyframes(frames, currentTime) {
+    let prevFrameIndex = Math.floor(currentTime);
+    let nextFrameIndex = Math.ceil(currentTime);
+    let prevFrame = frames[prevFrameIndex];
+    let nextFrame = frames[nextFrameIndex];
+
+    if (!prevFrame || !nextFrame) {
+        return null;
+    }
+
+    let interpolatedFrame = {
+        translation: [
+            lerp(prevFrame.keyframe.translation[0], nextFrame.keyframe.translation[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.translation[1], nextFrame.keyframe.translation[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.translation[2], nextFrame.keyframe.translation[2], currentTime - prevFrameIndex)
+        ],
+        rotation: [
+            lerp(prevFrame.keyframe.rotation[0], nextFrame.keyframe.rotation[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.rotation[1], nextFrame.keyframe.rotation[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.rotation[2], nextFrame.keyframe.rotation[2], currentTime - prevFrameIndex)
+        ],
+        scale: [
+            lerp(prevFrame.keyframe.scale[0], nextFrame.keyframe.scale[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.scale[1], nextFrame.keyframe.scale[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.scale[2], nextFrame.keyframe.scale[2], currentTime - prevFrameIndex)
+        ]
+    };
+
+    return interpolatedFrame;
+}
+
+function applyTransformations(animationData) {
+    if (!animationData) return;
+
+    state.transform.translate = [
+        animationData.translation[0] / 100,
+        animationData.translation[1] / 100,
+        animationData.translation[2] / 100
+    ];
+    state.transform.rotate = [
+        animationData.rotation[0] * Math.PI / 100,
+        animationData.rotation[1] * Math.PI / 100,
+        animationData.rotation[2] * Math.PI / 100
+    ]
+    state.transform.scale = animationData.scale;
+    renderModel();
+}
+
+function animate() {
+    if (animationPaused) return;
+
+    const now = performance.now();
+    const deltaTime = (now - lastFrameTime) / 1000; // ms to seconds
+    lastFrameTime = now;
+
+    updateAnimationTime(deltaTime * desiredFPS);
+
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+
+    renderModel();
+    requestAnimationFrame(animate);
+}
+
+
 
 window.onload = () => {
     if (!gl) {
