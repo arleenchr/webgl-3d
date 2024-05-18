@@ -246,6 +246,7 @@ const setProjectionMat = (proj, far, near, theta, phi, radius) => {
 
 // Scene Graph
 let graphContainer = document.getElementById('graph-container');
+let selectedComponent = null;
 
 function generateSceneGraph (models, level = 0){
     const padding = "padding-left: " + level * 20 + "px;";
@@ -255,12 +256,17 @@ function generateSceneGraph (models, level = 0){
         graphComponent.className = "graph-component";
         graphComponent.style = padding;
         graphComponent.innerHTML += `
-          <p class="graph-component-name">${model.name}</p>`;
+            <p class="graph-component-name">${model.name}</p>`;
         graphComponent.addEventListener("click", () => {
-          state.focus = model;
-          state.selectedObject = model;
-          console.log("select model")
-          console.log(state.selectedObject);
+            if (selectedComponent) {
+                selectedComponent.classList.remove("selected");
+            }
+            graphComponent.classList.add("selected");
+            selectedComponent = graphComponent;
+            state.focus = model;
+            state.selectedObject = model;
+            console.log("select model")
+            console.log(state.selectedObject);
         });
         graphContainer.appendChild(graphComponent);
         if (model.children && model.children.length > 0) {

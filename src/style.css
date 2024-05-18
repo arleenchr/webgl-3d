@@ -64,6 +64,10 @@
     margin-bottom: 1.5rem;
     overflow-y: auto;
 }
+.selected {
+    background-color: #777f83;
+}
+
 .camera-settings-container{
     margin-bottom: 3vh;
 }
