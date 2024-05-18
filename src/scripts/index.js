@@ -13,6 +13,7 @@ const setInitialState = () => {
         objects: endObject,
         selectedObject: null,
         model: newModel,
+        savedColor: null,
         chosenColor: [1, 0, 0],
         transform: {
             // x, y, z
@@ -370,19 +371,26 @@ document.addEventListener("DOMContentLoaded", () => {
 // });
 
 colorCheckbox.addEventListener("change", () => {
-    console.log(state.model.colors);
+    console.log("Color:", state.objects[0].model.colors);
     if (colorCheckbox.checked) {
-        // Render with the color from the file
         console.log("Checked");
+        if (state.savedColor != null) {
+            console.log("There are saved colors")
+            for (let i = 0; i < state.savedColor.length; i++) {
+                state.objects[0].model.colors[i] = state.savedColor[i];
+            }
+        } else {
+            console.log("There are no saved colors");
+        }
         renderModel();
     } else {
         console.log("Unchecked");
-        savedColor = state.model.colors;
+        state.savedColor = state.objects[0].model.colors.map(color => color.slice());
         // Change color to gray
-        for (let i = 0; i < state.model.colors.length; i++) {
+        for (let i = 0; i < state.objects[0].model.colors.length; i++) {
             // Calculate the average of the RGB values to get a gray color
-            let avgColor = (state.model.colors[i][0] + state.model.colors[i][1] + state.model.colors[i][2]) / 3;
-            state.model.colors[i] = [avgColor, avgColor, avgColor];
+            let avgColor = (state.objects[0].model.colors[i][0] + state.objects[0].model.colors[i][1] + state.objects[0].model.colors[i][2]) / 3;
+            state.objects[0].model.colors[i] = [avgColor, avgColor, avgColor];
         }
         
         renderModel();
