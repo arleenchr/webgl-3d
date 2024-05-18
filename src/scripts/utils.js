@@ -60,6 +60,13 @@ const generateRandomColors = (verts, color = null) => {
     return resColors;
 }
 
+// Set Color (solid)
+const setSolidColor = (model, color) => {
+    for (let i = 0; i < model.vertices.length; i++){
+        model.colors[i] = color;
+    }
+}
+
 // Generate Cuboid
 const generateCuboid = (height, width, depth, origin) => {
     let x_minus = origin[0] - width / 2;
