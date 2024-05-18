@@ -790,9 +790,7 @@ resetCamera.addEventListener('click', () => {
     else {
         state.radius = 1;
     }
-
-    state.transform.rotate[1] = 0;
-    state.transform.rotate[0] = 0;
+    
     cameraRadius.value = 0;
     state.projection = "orthographic";
     cameraProjection.value = "orthographic";
@@ -823,8 +821,8 @@ canvas.onmousemove = function(event) {
 
     let deltaX = currentX - previousX;
     let deltaY = currentY - previousY;
-    state.transform.rotate[1] += (deltaX * Math.PI) / 500;
-    state.transform.rotate[0] += (deltaY * Math.PI) / 500;
+    state.objects[0].rotate[1] += (deltaX * Math.PI) / 500;
+    state.objects[0].rotate[0] += (deltaY * Math.PI) / 500;
 
     previousX = currentX;
     previousY = currentY;
