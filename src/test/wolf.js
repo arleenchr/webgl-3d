@@ -2,25 +2,29 @@ const wolf = new Object();
 wolf.name = 'head';
 wolf.model = generateCuboid(1, 0.2, 0.5, [-0.5, 0, 0]);
 
+const head = new Object();
+head.name = 'head';
+head.setParent(wolf);
+
 const jaw = new Object();
 jaw.name = 'jaw';
 jaw.model = generateCuboid(0.5, 0.115, 0.4, [-0.65, -0.2, 0]);
-jaw.setParent(wolf);
+jaw.setParent(head);
 
 const earLeft = new Object();
 earLeft.name = 'earLeft';
 earLeft.model = generateCuboid(0.3, 0.075, 0.1, [-0.45, 0.65, -0.15]);
-earLeft.setParent(wolf);
+earLeft.setParent(head);
 
 const earRight = new Object();
 earRight.name = 'earRight';
 earRight.model = generateCuboid(0.3, 0.075, 0.1, [-0.45, 0.65, 0.15]);
-earRight.setParent(wolf);
+earRight.setParent(head);
 
 const chest = new Object();
 chest.name = 'chest';
 chest.model = generateCuboid(1.4, 0.45, 0.5, [-0.2, 0.05, 0]);
-chest.setParent(wolf);
+chest.setParent(head);
 
 const body = new Object();
 body.name = 'body';
