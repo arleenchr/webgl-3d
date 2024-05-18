@@ -96,6 +96,7 @@ const renderObject = (objects) => {
         
         console.log("View: ", view);
         console.log("Projection: ", projection);
+
         // Set the transformation matrix uniform
         const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
         gl.uniformMatrix4fv(uTransform, false, transform);
@@ -103,7 +104,6 @@ const renderObject = (objects) => {
         // Set the projection matrix uniform
         const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
         gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
-        
         
         // Calculate normal matrix
         var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
@@ -155,6 +155,8 @@ const renderObject = (objects) => {
             var shininess = gl.getUniformLocation(program, "shininess");
             gl.uniform1f(shininess, state.shine);
         }
+
+
     
         gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
 
@@ -177,12 +179,9 @@ const renderModel = () => {
     // Enable depth testing
     gl.enable(gl.DEPTH_TEST);
 
-    console.log("STATE OBJECT:", state.objects[0]);
-
-    console.log("TYPE", typeof state.objects[0]);
-
     state.objects[0].computeWorldMatrix();
 
+    console.log("OBJ: ", state.objects);
     renderObject(state.objects);
     console.log(state);
     
@@ -331,9 +330,10 @@ colorCheckbox.addEventListener("change", () => {
     console.log(state.model.colors);
     if (colorCheckbox.checked) {
         // Render with the color from the file
-        var event = new Event('change');
-        modelInput.dispatchEvent(event);
+        console.log("Checked");
+        renderModel();
     } else {
+        console.log("Unchecked");
         savedColor = state.model.colors;
         // Change color to gray
         for (let i = 0; i < state.model.colors.length; i++) {
