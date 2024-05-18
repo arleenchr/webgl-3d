@@ -244,7 +244,54 @@ const setProjectionMat = (proj, far, near, theta, phi, radius) => {
     }
 }
 
+// Scene Graph
+let graphContainer = document.getElementById('graph-container');
+let selectedComponent = null;
 
+function generateSceneGraph (models, level = 0){
+    const padding = "padding-left: " + level * 20 + "px;";
+    let idx = 0;
+    models.forEach((model) => {
+        let graphComponent = document.createElement("p");
+        graphComponent.className = "graph-component";
+        graphComponent.style = padding;
+        graphComponent.innerHTML += `
+            <p class="graph-component-name">${model.name}</p>`;
+        graphComponent.addEventListener("click", () => {
+            if (selectedComponent) {
+                selectedComponent.classList.remove("selected");
+            }
+            graphComponent.classList.add("selected");
+            selectedComponent = graphComponent;
+            state.focus = model;
+            state.selectedObject = model;
+            console.log("select model")
+            console.log(state.selectedObject);
+        });
+        graphContainer.appendChild(graphComponent);
+        if (model.children && model.children.length > 0) {
+          generateSceneGraph(model.children, level + 1);
+        }
+      });
+}
+
+generateSceneGraph(state.objects);
+
+//Export objects to JSON
+function exportToJsonFile(data) {
+    const jsonString = JSON.stringify(data, null, 4);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+} 
+
+// Color
 const setColor = (gl, model) => {
     const colorBuffer = gl.createBuffer();
     const colors = new Float32Array(model.colors.flat(1));

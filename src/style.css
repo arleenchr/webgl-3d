@@ -51,16 +51,23 @@
     font-size: medium;
 }
 
-.graph-container{
+#graph-container{
     width: auto;
     height: 15%;
     border-radius: 5px;
     background-color: #363F44;
-    padding: 1.5vh;
+    padding-left: 2.5vh;
+    padding-right: 2.5vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
     overflow-y: auto;
 }
+.selected {
+    background-color: #777f83;
+}
+
 .camera-settings-container{
     margin-bottom: 3vh;
 }
