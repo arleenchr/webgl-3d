@@ -296,6 +296,9 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (selectedOption === "Wolf") {
                 state.objects = wolfObject;
             }
+            else if (selectedOption === "Goat"){
+                state.objects = goatObject;
+            }
 
             state.selectedObject = state.objects[0];
             resetSceneGraph();
@@ -584,18 +587,24 @@ const setColor = (gl, model) => {
 /* Translate X */
 transX.addEventListener('input', () => {
     state.selectedObject.translate[0] = transX.value / 100;
+    const translationX = document.getElementById('translation-x');
+    translationX.innerText = transX.value / 100;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
     state.selectedObject.translate[1] = transY.value / 100;
+    const translationY = document.getElementById('translation-y');
+    translationY.innerText = transY.value / 100;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
     state.selectedObject.translate[2] = -transZ.value / 100;
+    const translationZ = document.getElementById('translation-z');
+    translationZ.innerText = -transZ.value / 100;
     renderModel();
 })
 

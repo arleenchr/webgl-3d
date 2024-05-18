@@ -29,6 +29,9 @@
                     <li class="model-option">
                         <p class="model-option-text">Wolf</p>
                     </li>
+                    <li class="model-option">
+                        <p class="model-option-text">Goat</p>
+                    </li>
                 </ul>
             </div>
             <!-- <input type="file" id="modelFile" class="model-input" accept="application/json"> -->
@@ -131,19 +134,19 @@
                                 <p class="transformation-label">X</p>
                                 <p class="transformation-label">-100</p>
                                 <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-x-slider">
-                                <p class="transformation-label">100</p>
+                                <p class="transformation-label" id="translation-x">100</p>
                             </div>
                             <div class="transformation-input-container">
                                 <p class="transformation-label">Y</p>
                                 <p class="transformation-label">-100</p>
                                 <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-y-slider">
-                                <p class="transformation-label">100</p>
+                                <p class="transformation-label" id="translation-y">100</p>
                             </div>
                             <div class="transformation-input-container">
                                 <p class="transformation-label">Z</p>
                                 <p class="transformation-label">-100</p>
                                 <input type="range" min="-100" max="100" step="5" value="0" class="transformation-slider" id="translation-z-slider">
-                                <p class="transformation-label">100</p>
+                                <p class="transformation-label" id="translation-z">100</p>
                             </div>
                         </div>
                         <div class="transformation-type-container">
@@ -204,6 +207,7 @@
         <script src="test/pyramid.js"></script>
         <script src="test/octahedron.js"></script>
         <script src="test/wolf.js"></script>
+        <script src="test/goat.js"></script>
         <script src="scripts/index.js"></script>
         <!-- <script src="scripts/indexArticulated.js"></script>  -->
     </body>
