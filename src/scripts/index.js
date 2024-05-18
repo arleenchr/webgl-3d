@@ -761,6 +761,14 @@ function lerp(a, b, t) {
     return a * (1 - t) + b * t;
 }
 
+// function easeInSine(x) {
+//     return 1 - Math.cos((x * Math.PI) / 2);
+// }
+
+function easeOutSine(x) {
+    return Math.sin((x * Math.PI) / 2);
+}
+
 function interpolateKeyframes(frames, currentTime) {
     let prevFrameIndex = Math.floor(currentTime);
     let nextFrameIndex = Math.ceil(currentTime);
@@ -771,21 +779,25 @@ function interpolateKeyframes(frames, currentTime) {
         return null;
     }
 
+    let t = currentTime - prevFrameIndex;
+    let easedT = easeOutSine(t);
+    // let easedT = easeInSine(t);
+
     let interpolatedFrame = {
         translation: [
-            lerp(prevFrame.keyframe.translation[0], nextFrame.keyframe.translation[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.translation[1], nextFrame.keyframe.translation[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.translation[2], nextFrame.keyframe.translation[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.keyframe.translation[0], nextFrame.keyframe.translation[0], easedT),
+            lerp(prevFrame.keyframe.translation[1], nextFrame.keyframe.translation[1], easedT),
+            lerp(prevFrame.keyframe.translation[2], nextFrame.keyframe.translation[2], easedT)
         ],
         rotation: [
-            lerp(prevFrame.keyframe.rotation[0], nextFrame.keyframe.rotation[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.rotation[1], nextFrame.keyframe.rotation[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.rotation[2], nextFrame.keyframe.rotation[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.keyframe.rotation[0], nextFrame.keyframe.rotation[0], easedT),
+            lerp(prevFrame.keyframe.rotation[1], nextFrame.keyframe.rotation[1], easedT),
+            lerp(prevFrame.keyframe.rotation[2], nextFrame.keyframe.rotation[2], easedT)
         ],
         scale: [
-            lerp(prevFrame.keyframe.scale[0], nextFrame.keyframe.scale[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.scale[1], nextFrame.keyframe.scale[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.keyframe.scale[2], nextFrame.keyframe.scale[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.keyframe.scale[0], nextFrame.keyframe.scale[0], easedT),
+            lerp(prevFrame.keyframe.scale[1], nextFrame.keyframe.scale[1], easedT),
+            lerp(prevFrame.keyframe.scale[2], nextFrame.keyframe.scale[2], easedT)
         ]
     };
 
