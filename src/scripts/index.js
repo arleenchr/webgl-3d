@@ -114,29 +114,46 @@ const renderObject = (objects) => {
         gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
         
         // Set material of model
-        if(state.material == "Normal"){
-            setColor(gl, obj.model);
+        if(state.material == "Basic"){
+            setColor(gl, state.model);
             const vertColor = gl.getAttribLocation(program, "aColor");
             gl.enableVertexAttribArray(vertColor);
             gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+
+            var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+            gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+            var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+            gl.uniform4fv(materialAmbient, state.materialAmbient);
         }
-        else if(state.material == "Basic"){
-            console.log("ini basicccccc")
-        
-            var userColor = gl.getUniformLocation(program, "userColor");
-            gl.uniform4fv(userColor, [1,0,0,1]);
-        
-            var reverseLightDirectionLocation = gl.getUniformLocation(
-            program,
-            "uReverseLightDirection"
-            );
-        
-            normalizeLight = matrices.normalize([0.5, 0.7, 1]);
-            console.log("Normalize Light: ", normalizeLight)
-            gl.uniform3fv(
-                reverseLightDirectionLocation,
-                matrices.normalize(normalizeLight)
-            );
+        else if(state.material == "Phong"){
+            console.log("ini phonggggg")
+
+            setColor(gl, state.model);
+            const vertColor = gl.getAttribLocation(program, "aColor");
+            gl.enableVertexAttribArray(vertColor);
+            gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+
+            var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+            gl.uniform3fv(lightDirection, [-1,1,-1]);
+            
+            var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+            gl.uniform4fv(lightDiffuse, [1,1,1,1]);
+            
+            var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+            gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+            var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+            gl.uniform4fv(lightSpecular, [1,1,1,1]);
+            
+            var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+            gl.uniform4fv(materialAmbient, state.materialAmbient);
+
+            var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+            gl.uniform4fv(materialSpecular, state.materialSpecular);
+
+            var shininess = gl.getUniformLocation(program, "shininess");
+            gl.uniform1f(shininess, state.shine);
         }
     
         gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
@@ -690,6 +707,7 @@ materialAmbient.addEventListener('input', () => {
 
 /* Change Material Specualr */
 materialSpecular.addEventListener('input', () => {
+    console.log("ganti material specular ", materialSpecular.value)
     state.materialSpecular = [materialSpecular.value, materialSpecular.value, materialSpecular.value, 1.0];
     renderModel();
 })
