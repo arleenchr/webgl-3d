@@ -173,98 +173,98 @@ const renderModel = () => {
     
 }
 
-// const renderModel = () => {
-//     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+const renderModel2 = () => {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-//     // Clear canvas first
-//     gl.clearColor(1.0, 1.0, 1.0, 1.0);
-//     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // Clear canvas first
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-//     // Enable face culling
-//     gl.enable(gl.CULL_FACE);
+    // Enable face culling
+    gl.enable(gl.CULL_FACE);
 
-//     // Enable depth testing
-//     gl.enable(gl.DEPTH_TEST); 
+    // Enable depth testing
+    gl.enable(gl.DEPTH_TEST); 
 
-//     gl.useProgram(program);
+    gl.useProgram(program);
 
-//     const view = setViewMat(state.viewMatrix);
+    const view = setViewMat(state.viewMatrix);
 
-//     // Set up the geometry of the object
-//     const geometry = setObjGeometry(gl, state.model, view); 
+    // Set up the geometry of the object
+    const geometry = setObjGeometry(gl, state.model, view); 
 
-//     // Set up the transformation matrix
-//     const transform = setTransformMat(state.model, state.transform);
+    // Set up the transformation matrix
+    const transform = setTransformMat(state.model, state.transform);
 
-//     // Set up the projection matrix
-//     const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
+    // Set up the projection matrix
+    const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
 
-//     console.log("View: ", view);
-//     console.log("Projection: ", projection);
-//     // Set the transformation matrix uniform
-//     const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
-//     gl.uniformMatrix4fv(uTransform, false, transform);
+    console.log("View: ", view);
+    console.log("Projection: ", projection);
+    // Set the transformation matrix uniform
+    const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
+    gl.uniformMatrix4fv(uTransform, false, transform);
 
-//     // Set the projection matrix uniform
-//     const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
-//     gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+    // Set the projection matrix uniform
+    const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
+    gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
 
 
-//     // Calculate normal matrix
-//     var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
-//     let modelMatrix = matrices.multiply(view, transform);
-//     let nMatrix = matrices.inverse(modelMatrix);
-//     nMatrix = matrices.transpose(nMatrix);
+    // Calculate normal matrix
+    var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
+    let modelMatrix = matrices.multiply(view, transform);
+    let nMatrix = matrices.inverse(modelMatrix);
+    nMatrix = matrices.transpose(nMatrix);
 
-//     gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
+    gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
 
-//     // Set material of model
-//     if(state.material == "Normal"){
-//         setColor(gl, state.model);
-//         const vertColor = gl.getAttribLocation(program, "aColor");
-//         gl.enableVertexAttribArray(vertColor);
-//         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
-//     }
-//     else if(state.material == "Basic"){
-//         console.log("ini basicccccc")
+    // Set material of model
+    if(state.material == "Normal"){
+        setColor(gl, state.model);
+        const vertColor = gl.getAttribLocation(program, "aColor");
+        gl.enableVertexAttribArray(vertColor);
+        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+    }
+    else if(state.material == "Basic"){
+        console.log("ini basicccccc")
 
-//         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-//         gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
+        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+        gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
 
-//         // Change light ambient to a subtle blue color
-//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-//         gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
-//     }
-//     else if(state.material == "Phong"){
-//         console.log("ini phonggggg")
+        // Change light ambient to a subtle blue color
+        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+        gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
+    }
+    else if(state.material == "Phong"){
+        console.log("ini phonggggg")
 
-//         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-//         gl.uniform3fv(lightDirection, [-1,1,-1]);
+        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+        gl.uniform3fv(lightDirection, [-1,1,-1]);
         
-//         var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
-//         gl.uniform4fv(lightDiffuse, [1,1,1,1]);
+        var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+        gl.uniform4fv(lightDiffuse, [1,1,1,1]);
         
-//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-//         gl.uniform4fv(lightAmbient, state.lightAmbient);
+        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+        gl.uniform4fv(lightAmbient, state.lightAmbient);
 
-//         var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
-//         gl.uniform4fv(lightSpecular, [1,1,1,1]);
+        var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+        gl.uniform4fv(lightSpecular, [1,1,1,1]);
 
-//         var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
-//         gl.uniform4fv(materialDiffuse, state.materialColor);
+        var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
+        gl.uniform4fv(materialDiffuse, state.materialColor);
         
-//         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
-//         gl.uniform4fv(materialAmbient, state.materialAmbient);
+        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+        gl.uniform4fv(materialAmbient, state.materialAmbient);
 
-//         var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
-//         gl.uniform4fv(materialSpecular, state.materialSpecular);
+        var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+        gl.uniform4fv(materialSpecular, state.materialSpecular);
 
-//         var shininess = gl.getUniformLocation(program, "shininess");
-//         gl.uniform1f(shininess, state.shine);
-//     }
+        var shininess = gl.getUniformLocation(program, "shininess");
+        gl.uniform1f(shininess, state.shine);
+    }
 
-//     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
-// }
+    gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
+}
 
 // Input model from JSON file
 // modelInput.addEventListener("change", () => {
