@@ -115,7 +115,8 @@ const renderObject = (objects) => {
         
         // Set material of model
         if(state.material == "Basic"){
-            setColor(gl, state.model);
+            console.log("light ambient, material ambient", state.lightAmbient, state.materialAmbient)
+            setColor(gl, obj.model);
             const vertColor = gl.getAttribLocation(program, "aColor");
             gl.enableVertexAttribArray(vertColor);
             gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
@@ -129,7 +130,7 @@ const renderObject = (objects) => {
         else if(state.material == "Phong"){
             console.log("ini phonggggg")
 
-            setColor(gl, state.model);
+            setColor(gl, obj.model);
             const vertColor = gl.getAttribLocation(program, "aColor");
             gl.enableVertexAttribArray(vertColor);
             gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
@@ -717,27 +718,27 @@ materialRadio.forEach((radio) => {
 
 /* Change Light Ambient */
 lightAmbient.addEventListener('input', () => {
-    state.lightAmbient = [lightAmbient.value, lightAmbient.value, lightAmbient.value, 1.0];
+    state.lightAmbient = [parseFloat(lightAmbient.value), parseFloat(lightAmbient.value), parseFloat(lightAmbient.value), 1.0];
     renderModel();
 })
 
 
 /* Change Material Ambient */
 materialAmbient.addEventListener('input', () => {
-    state.materialAmbient = [materialAmbient.value, materialAmbient.value, materialAmbient.value, 1.0];
+    state.materialAmbient = [parseFloat(materialAmbient.value), parseFloat(materialAmbient.value), parseFloat(materialAmbient.value), 1.0];
     renderModel();
 })
 
 /* Change Material Specualr */
 materialSpecular.addEventListener('input', () => {
     console.log("ganti material specular ", materialSpecular.value)
-    state.materialSpecular = [materialSpecular.value, materialSpecular.value, materialSpecular.value, 1.0];
+    state.materialSpecular = [parseFloat(materialSpecular.value), parseFloat(materialSpecular.value), parseFloat(materialSpecular.value), 1.0];
     renderModel();
 })
 
 /* Change Material Shininess */
 materialShininess.addEventListener('input', () => {
-    state.shine = materialShininess.value;
+    state.shine = parseFloat(materialShininess.value);
     renderModel();
 })
 
