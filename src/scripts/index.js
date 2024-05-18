@@ -38,6 +38,7 @@ setInitialState();
 
 var canvas = document.querySelector("#gl-canvas")
 const modelInput = document.getElementById("modelFile");
+const colorCheckbox = document.getElementById("color-button");
 
 const transX = document.getElementById('translation-x-slider');
 const transY = document.getElementById('translation-y-slider');
@@ -70,8 +71,6 @@ const materialDiffuse = document.getElementById("material-diffuse");
 let mouseDown = false;
 let lastMouseX = null;
 let lastMouseY = null;
-
-
 
 
 var program = createProgram(gl, vertex_shader, fragment_shader);
@@ -181,6 +180,9 @@ modelInput.addEventListener("change", () => {
     // Check file extension
     if (file.type !== "application/json") {
         alert("Wrong file extension! Please upload a file with JSON extension!");
+
+        // Disable the color checkbox
+        document.getElementById('color-button').disabled = true;
         return;
     }
   
@@ -202,9 +204,35 @@ modelInput.addEventListener("change", () => {
         // console.log("Test HOHO", state.model);
         state.chosenColor = color;
 
+        // Enable or disable the checkbox
+        if (state.model.vertices.length > 0) {
+            document.getElementById('color-button').disabled = false;
+        } else {
+            document.getElementById('color-button').disabled = true;
+        }
+
         renderModel();
     };
     reader.readAsText(file);    
+});
+
+colorCheckbox.addEventListener("change", () => {
+    console.log(state.model.colors);
+    if (colorCheckbox.checked) {
+        // Render with the color from the file
+        var event = new Event('change');
+        modelInput.dispatchEvent(event);
+    } else {
+        savedColor = state.model.colors;
+        // Change color to gray
+        for (let i = 0; i < state.model.colors.length; i++) {
+            // Calculate the average of the RGB values to get a gray color
+            let avgColor = (state.model.colors[i][0] + state.model.colors[i][1] + state.model.colors[i][2]) / 3;
+            state.model.colors[i] = [avgColor, avgColor, avgColor];
+        }
+        
+        renderModel();
+    }
 });
 
 const setViewMat = (viewMat) => {
@@ -421,6 +449,78 @@ scaleZ.addEventListener('input', () => {
     renderModel();
 })
 
+let gravityFeature = false;
+let shiftVal = 5;
+let jumpHeight = 30;
+let gravity = 9.8;
+
+// Model Controller using Keyboard + Simple Physics Engine
+window.addEventListener('keydown', function(event) {
+    switch (event.key) {
+        case "ArrowLeft":
+            if (transX.value > -100) {
+                transX.value = Math.max(parseInt(transX.value) - shiftVal, -100);
+                state.transform.translate[0] = transX.value / 100;
+                renderModel();
+            }
+            break;
+        case "ArrowRight":
+            if (transX.value < 100) {
+                transX.value = Math.min(parseInt(transX.value) + shiftVal, 100);
+                state.transform.translate[0] = transX.value / 100;
+                renderModel();
+            }
+            break;
+        case "ArrowUp":
+            if (!gravityFeature) {
+                if (transY.value < 100) {
+                    transY.value = Math.min(parseInt(transY.value) + shiftVal, 100);
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }
+            } else {
+                console.log("Gravity Exists");
+
+                // Jumping
+                let time = 0;
+                let velocity = Math.sqrt(2 * gravity * jumpHeight);
+                let jumpInterval = setInterval(function() {
+                    time += 1/60; // Increment time
+                    velocity -= gravity * time; // Update velocity based on gravity
+                    transY.value += velocity; // Update position based on velocity
+
+                    if (transY.value <= 0) { // When the object has landed
+                        transY.value = 0;
+                        time = 0; // Reset time
+                    }
+
+                    if (velocity <= 0 && transY.value <= 0.01) { // Clear interval and reset velocity when object has landed
+                        clearInterval(jumpInterval);
+                        velocity = Math.sqrt(2 * gravity * jumpHeight); 
+                    }
+
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }, 1000/60); // Render 60 times per second
+            }
+            break;
+        case "ArrowDown": 
+            if (!gravityFeature) {
+                if (transY.value > -100) {
+                    transY.value = Math.max(parseInt(transY.value) - shiftVal, -100);
+                    state.transform.translate[1] = transY.value / 100;
+                    renderModel();
+                }
+            } else {
+                console.log("Gravity Exists");
+            }
+            break;
+        case "G": // Activate or Deactivate Gravity Feature
+            gravityFeature = !gravityFeature;
+            break;
+    }
+}, true);
+
 /* Material */
 materialRadio.forEach((radio) => {
     radio.addEventListener('change', () => {
@@ -603,6 +703,170 @@ canvas.onmousemove = function(event) {
 
     renderModel();
 };
+
+// ANIMATION
+const playPauseButton = document.getElementById('play-pause-button');
+const fpsInput = document.getElementById('fps-input');
+const autoReplayButton = document.getElementById('auto-replay');
+const animationSlider = document.getElementById('animation-slider');
+const reverseToggle = document.getElementById('reverse-toggle');
+
+let currentTime = 0;
+let animationSpeed = 1;
+let animationPaused = true;
+let desiredFPS = 3; // default
+let totalFrames = hollowOctahedronAnim.frames.length;
+let totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+let lastFrameTime = performance.now();
+let isReversed = false;
+
+animationSlider.max = totalFrames - 1;
+
+playPauseButton.addEventListener('click', toggleAnimation);
+fpsInput.addEventListener('input', function() {
+    desiredFPS = parseInt(this.value);
+    totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+    console.log(desiredFPS);
+});
+
+animationSlider.addEventListener('input', function() {
+    currentTime = animationSlider.value / desiredFPS;
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+    renderModel();
+    if (!animationPaused) {
+        lastFrameTime = performance.now();
+    }
+});
+
+reverseToggle.addEventListener('change', function() {
+    isReversed = reverseToggle.checked;
+    if (isReversed) {
+        animationSlider.value = totalFrames - 1;
+        currentTime = (totalFrames - 1) / desiredFPS;
+    } else {
+        animationSlider.value = 0;
+        currentTime = 0;
+    }
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+    renderModel();
+    console.log('Reverse animation:', isReversed);
+});
+
+function toggleAnimation() {
+    animationPaused = !animationPaused;
+    if (!animationPaused) {
+        lastFrameTime = performance.now(); // reset frame time on start
+        if (isReversed) {
+            animationSlider.value = totalFrames - 1;
+            currentTime = (totalFrames - 1) / desiredFPS;
+        }
+        animate();
+        playPauseButton.textContent = "Pause Animation";
+        console.log("playing animation");
+    } else {
+        playPauseButton.textContent = "Play Animation";
+        console.log("pausing animation");
+    }
+}
+
+function updateAnimationTime(deltaTime) {
+    const delta = deltaTime * animationSpeed;
+    if (isReversed) {
+        currentTime -= delta;
+        if (currentTime < 0) {
+            if (autoReplayButton.checked) {
+                currentTime += totalAnimationTime;
+            } else {
+                currentTime = 0;
+                animationPaused = true;
+                playPauseButton.textContent = "Play Animation";
+            }
+        }
+    } else {
+        currentTime += delta;
+        if (autoReplayButton.checked && totalAnimationTime !== 0) {
+            currentTime %= totalAnimationTime;
+        } else if (currentTime >= totalAnimationTime) {
+            // Animation finished
+            animationPaused = true;
+            playPauseButton.textContent = "Play Animation";
+            currentTime = 0; // reset time
+        }
+    }
+
+    animationSlider.value = Math.floor(currentTime * desiredFPS);
+}
+
+function lerp(a, b, t) {
+    return a * (1 - t) + b * t;
+}
+
+function interpolateKeyframes(frames, currentTime) {
+    let prevFrameIndex = Math.floor(currentTime);
+    let nextFrameIndex = Math.ceil(currentTime);
+    let prevFrame = frames[prevFrameIndex];
+    let nextFrame = frames[nextFrameIndex];
+
+    if (!prevFrame || !nextFrame) {
+        return null;
+    }
+
+    let interpolatedFrame = {
+        translation: [
+            lerp(prevFrame.keyframe.translation[0], nextFrame.keyframe.translation[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.translation[1], nextFrame.keyframe.translation[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.translation[2], nextFrame.keyframe.translation[2], currentTime - prevFrameIndex)
+        ],
+        rotation: [
+            lerp(prevFrame.keyframe.rotation[0], nextFrame.keyframe.rotation[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.rotation[1], nextFrame.keyframe.rotation[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.rotation[2], nextFrame.keyframe.rotation[2], currentTime - prevFrameIndex)
+        ],
+        scale: [
+            lerp(prevFrame.keyframe.scale[0], nextFrame.keyframe.scale[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.scale[1], nextFrame.keyframe.scale[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.keyframe.scale[2], nextFrame.keyframe.scale[2], currentTime - prevFrameIndex)
+        ]
+    };
+
+    return interpolatedFrame;
+}
+
+function applyTransformations(animationData) {
+    if (!animationData) return;
+
+    state.transform.translate = [
+        animationData.translation[0] / 100,
+        animationData.translation[1] / 100,
+        animationData.translation[2] / 100
+    ];
+    state.transform.rotate = [
+        animationData.rotation[0] * Math.PI / 100,
+        animationData.rotation[1] * Math.PI / 100,
+        animationData.rotation[2] * Math.PI / 100
+    ]
+    state.transform.scale = animationData.scale;
+    renderModel();
+}
+
+function animate() {
+    if (animationPaused) return;
+
+    const now = performance.now();
+    const deltaTime = (now - lastFrameTime) / 1000; // ms to seconds
+    lastFrameTime = now;
+
+    updateAnimationTime(deltaTime * desiredFPS);
+
+    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    applyTransformations(interpolatedFrame);
+
+    renderModel();
+    requestAnimationFrame(animate);
+}
+
 
 
 window.onload = () => {
