@@ -49,12 +49,8 @@
             <div class="material-settings-container">
                 <h2 class="category-title">Material</h2>
                 <div class="material-buttons" id="material-input">
-                    <div class="material-button-container" >
-                        <input type="radio" id="normal-button" name="material" value="Normal" class="radio-button" checked>
-                        <label for="basic-button" class="radio-label">Normal</label><br>
-                    </div>
                     <div class="material-button-container">
-                        <input type="radio" id="basic-button" name="material" value="Basic" class="radio-button">
+                        <input type="radio" id="basic-button" name="material" value="Basic" class="radio-button" checked>
                         <label for="basic-button" class="radio-label">Basic</label><br>
                     </div>
                     <div class="material-button-container">
@@ -64,32 +60,36 @@
                 </div>
                 <h3 class="sub-category-title">Material Atribut</h3>
                 <div class="material-atribut-container">
-                    <div>
-                        <label for="light-ambient">Light Ambient</label>
-                        <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="light-ambient" disabled>
+                    <div class="transformation-input-container">
+                        <p class="transformation-label">Light Ambient</p>
+                        <p class="transformation-label">0</p>
+                        <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="light-ambient">
+                        <p class="transformation-label">1</p>
                     </div>
-                    <div>
-                        <label for="material-color">Material Color</label>
-                        <input type="color" id="material-color" name="color" value="#808080" disabled>
-                    </div>
-                    <div>
-                        <label for="material-ambient">Material Ambient</label>
+                    <div class="transformation-input-container">
+                        <p class="transformation-label">Material Ambient</p>
+                        <p class="transformation-label">0</p>
                         <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-ambient" disabled>
+                        <p class="transformation-label">1</p>
                     </div>
-                    <div>
-                        <label for="material-specular">Material Specular</label>
+                    <div class="transformation-input-container">
+                        <p class="transformation-label">Material Specular</p>
+                        <p class="transformation-label">0</p>
                         <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-specular" disabled>
+                        <p class="transformation-label">1</p>
                     </div>
-                    <div>
-                        <label for="material-shininess">Material Shininess</label>
-                        <input type="range" min="0" max="100" step="1" value="30" class="animation-slider" id="material-shininess" disabled>
+                    <div class="transformation-input-container">
+                        <p class="transformation-label">Material Shininess</p>
+                        <p class="transformation-label">0.1</p>
+                        <input type="range" min="0.1" max="100" step="1" value="30" class="animation-slider" id="material-shininess" disabled>
+                        <p class="transformation-label">100</p>
                     </div>
                 </div>
             </div>
             <div class="color-container">
                 <!-- Color Checkbox -->
                 <div class="color-checkbox">
-                    <input type="checkbox" id="color-button" checked disabled>
+                    <input type="checkbox" id="color-button">
                     <label for="color-button">Colored</label>
                 </div>
                 <!-- Reflection Checkbox -->
@@ -194,11 +194,13 @@
         <script src="scripts/matrix.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/animation.js"></script>
-        <script src="scripts/index.js"></script>
-        <!-- <script src="scripts/utilsArticulated.js"></script>
         <script src="scripts/object.js"></script>
-        <script src="scripts/cube.js"></script>
+        <!-- <script src="test/cube.js"></script> -->
+        <!-- <script src="test/tube.js"></script> -->
+        <script src="test/pyramid.js"></script>
+        <!-- <script src="test/octahedron.js"></script> -->
+        <script src="scripts/index.js"></script>
         <script src="scripts/wolf.js"></script>
-        <script src="scripts/indexArticulated.js"></script> -->
+        <!-- <script src="scripts/indexArticulated.js"></script> --> 
     </body>
 </html>

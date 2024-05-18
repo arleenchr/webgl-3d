@@ -10,6 +10,8 @@ var state;
 // Set initial state for webgl canvas
 const setInitialState = () => {
     state = {
+        objects: endObject,
+        selectedObject: null,
         model: newModel,
         chosenColor: [1, 0, 0],
         transform: {
@@ -29,10 +31,9 @@ const setInitialState = () => {
         projection: "orthographic", // Default
         phi: 10.0, 
         theta: 5.0,
-        material: "Normal",
+        material: "Basic",
         radius: 1.0,
         lightAmbient: [0.03, 0.03, 0.03, 1],
-        materialColor: [1, 1, 1, 1],
         materialAmbient: [1, 1, 1, 1],
         materialSpecular: [1, 1, 1, 1],
         shine: 30.0,
@@ -67,7 +68,6 @@ const resetCamera = document.getElementById('reset-camera-button');
 
 //material 
 const lightAmbient = document.getElementById("light-ambient");
-const materialColor = document.getElementById("material-color");
 const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
 const materialShininess = document.getElementById("material-shininess");
@@ -77,9 +77,117 @@ let lastMouseX = null;
 let lastMouseY = null;
 
 
-var program = createProgram(gl, vertex_shader, fragment_shader);
+var program = createProgram(gl, vertex_shader, fragment_shader_basic);
+
+const renderObject = (objects) => {
+    objects.forEach(obj => {
+        gl.useProgram(program);
+
+        const view = setViewMat(state.viewMatrix);
+        
+        // Set up the geometry of the object
+        const geometry = setObjGeometry(gl, obj.model, view); 
+        
+        // Set up the transformation matrix
+        const transform = obj.worldMatrix;
+        
+        // Set up the projection matrix
+        const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
+        
+        console.log("View: ", view);
+        console.log("Projection: ", projection);
+
+        // Set the transformation matrix uniform
+        const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
+        gl.uniformMatrix4fv(uTransform, false, transform);
+        
+        // Set the projection matrix uniform
+        const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
+        gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+        
+        // Calculate normal matrix
+        var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
+        let modelMatrix = matrices.multiply(view, transform);
+        let nMatrix = matrices.inverse(modelMatrix);
+        nMatrix = matrices.transpose(nMatrix);
+        
+        gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
+        
+        // Set material of model
+        if(state.material == "Basic"){
+            setColor(gl, state.model);
+            const vertColor = gl.getAttribLocation(program, "aColor");
+            gl.enableVertexAttribArray(vertColor);
+            gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+
+            var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+            gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+            var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+            gl.uniform4fv(materialAmbient, state.materialAmbient);
+        }
+        else if(state.material == "Phong"){
+            console.log("ini phonggggg")
+
+            setColor(gl, state.model);
+            const vertColor = gl.getAttribLocation(program, "aColor");
+            gl.enableVertexAttribArray(vertColor);
+            gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+
+            var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+            gl.uniform3fv(lightDirection, [-1,1,-1]);
+            
+            var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+            gl.uniform4fv(lightDiffuse, [1,1,1,1]);
+            
+            var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+            gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+            var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+            gl.uniform4fv(lightSpecular, [1,1,1,1]);
+            
+            var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+            gl.uniform4fv(materialAmbient, state.materialAmbient);
+
+            var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+            gl.uniform4fv(materialSpecular, state.materialSpecular);
+
+            var shininess = gl.getUniformLocation(program, "shininess");
+            gl.uniform1f(shininess, state.shine);
+        }
+
+
+    
+        gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
+
+        if (obj.children.length > 0) {
+            renderObject(obj.children);
+        }
+    });
+}
 
 const renderModel = () => {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Clear canvas first
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Enable face culling
+    gl.enable(gl.CULL_FACE);
+
+    // Enable depth testing
+    gl.enable(gl.DEPTH_TEST);
+
+    state.objects[0].computeWorldMatrix();
+
+    console.log("OBJ: ", state.objects);
+    renderObject(state.objects);
+    console.log(state);
+    
+}
+
+const renderModel2 = () => {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     // Clear canvas first
@@ -125,24 +233,25 @@ const renderModel = () => {
     gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
 
     // Set material of model
-    if(state.material == "Normal"){
+    if(state.material == "Basic"){
         setColor(gl, state.model);
         const vertColor = gl.getAttribLocation(program, "aColor");
         gl.enableVertexAttribArray(vertColor);
         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
-    }
-    else if(state.material == "Basic"){
-        console.log("ini basicccccc")
 
-        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-        gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
-
-        // Change light ambient to a subtle blue color
         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-        gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
+        gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+        gl.uniform4fv(materialAmbient, state.materialAmbient);
     }
     else if(state.material == "Phong"){
         console.log("ini phonggggg")
+
+        setColor(gl, state.model);
+        const vertColor = gl.getAttribLocation(program, "aColor");
+        gl.enableVertexAttribArray(vertColor);
+        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
         gl.uniform3fv(lightDirection, [-1,1,-1]);
@@ -155,9 +264,6 @@ const renderModel = () => {
 
         var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
         gl.uniform4fv(lightSpecular, [1,1,1,1]);
-
-        var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
-        gl.uniform4fv(materialDiffuse, state.materialColor);
         
         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
         gl.uniform4fv(materialAmbient, state.materialAmbient);
@@ -195,56 +301,62 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-Input model from JSON file
-modelInput.addEventListener("change", () => {
-    const file = modelInput.files[0];
+// Input model from JSON file
+// modelInput.addEventListener("change", () => {
+//     const file = modelInput.files[0];
 
-    // Check file extension
-    if (file.type !== "application/json") {
-        alert("Wrong file extension! Please upload a file with JSON extension!");
+//     // Check file extension
+//     if (file.type !== "application/json") {
+//         alert("Wrong file extension! Please upload a file with JSON extension!");
 
-        // Disable the color checkbox
-        document.getElementById('color-button').disabled = true;
-        return;
-    }
+//         // Disable the color checkbox
+//         document.getElementById('color-button').disabled = true;
+//         return;
+//     }
   
-    // Read file
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const text = e.target.result;
-        const color = state.chosenColor;
+//     // Read file
+//     const reader = new FileReader();
+//     reader.onload = (e) => {
+//         const text = e.target.result;
+//         const color = state.chosenColor;
 
-        // Set initial state
-        setInitialState();
+//         // Set initial state
+//         setInitialState();
 
-        // Clear canvas first
-        gl.clearColor(1.0, 1.0, 1.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//         // Clear canvas first
+//         gl.clearColor(1.0, 1.0, 1.0, 1.0);
+//         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Load object
-        state.model = JSON.parse(text);
-        // console.log("Test HOHO", state.model);
-        state.chosenColor = color;
+//         // Load object
+//         let obj = new Object();
+//         obj = JSON.parse(text);
+//         state.objects = obj;
 
-        // Enable or disable the checkbox
-        if (state.model.vertices.length > 0) {
-            document.getElementById('color-button').disabled = false;
-        } else {
-            document.getElementById('color-button').disabled = true;
-        }
+//         console.log(state);
 
-        renderModel();
-    };
-    reader.readAsText(file);    
-});
+//         state.chosenColor = color;
+//         state.selectedObject = state.objects[0];
+
+//         // Enable or disable the checkbox
+//         if (state.objects.length > 0) {
+//             document.getElementById('color-button').disabled = false;
+//         } else {
+//             document.getElementById('color-button').disabled = true;
+//         }
+
+//         renderModel();
+//     };
+//     reader.readAsText(file);    
+// });
 
 colorCheckbox.addEventListener("change", () => {
     console.log(state.model.colors);
     if (colorCheckbox.checked) {
         // Render with the color from the file
-        var event = new Event('change');
-        modelInput.dispatchEvent(event);
+        console.log("Checked");
+        renderModel();
     } else {
+        console.log("Unchecked");
         savedColor = state.model.colors;
         // Change color to gray
         for (let i = 0; i < state.model.colors.length; i++) {
@@ -295,11 +407,11 @@ const setObjGeometry = (gl, model) => {
     console.log("Model", model);
 
     // Flatten to be used
-    const vertices = new Float32Array(model.vertices.flat(1));
+    const vertices = new Float32Array(model?.vertices.flat(1));
 
     // -1 to convert to 0-based index since the faces are 1-based index
-    const normals = new Float32Array(model.normals.flat(1));
-    const faces = new Uint16Array(model.faces.flat(1).map((x) => x - 1));
+    const normals = new Float32Array(model?.normals.flat(1));
+    const faces = new Uint16Array(model?.faces.flat(1).map((x) => x - 1));
     
     const vertexBuff = gl.createBuffer();
     if (!vertexBuff) { 
@@ -326,7 +438,7 @@ const setObjGeometry = (gl, model) => {
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuff);
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
   
-    console.log("LenFaces HOHO:", faces.length);
+    // console.log("LenFaces HOHO:", faces.length);
     return { vertexBuff: vertexBuff, normalBuff: normalBuff, faceBuff: faceBuff, lenFaces: faces.length };
 }
 
@@ -410,64 +522,97 @@ const setProjectionMat = (proj, far, near, theta, phi, radius) => {
     }
 }
 
+// Scene Graph
+let graphContainer = document.getElementById('graph-container');
+let selectedComponent = null;
+
+function generateSceneGraph (models, level = 0){
+    const padding = "padding-left: " + level * 20 + "px;";
+    let idx = 0;
+    models.forEach((model) => {
+        let graphComponent = document.createElement("p");
+        graphComponent.className = "graph-component";
+        graphComponent.style = padding;
+        graphComponent.innerHTML += `
+            <p class="graph-component-name">${model.name}</p>`;
+        graphComponent.addEventListener("click", () => {
+            if (selectedComponent) {
+                selectedComponent.classList.remove("selected");
+            }
+            graphComponent.classList.add("selected");
+            selectedComponent = graphComponent;
+            state.focus = model;
+            state.selectedObject = model;
+            console.log("select model")
+            console.log(state.selectedObject);
+        });
+        graphContainer.appendChild(graphComponent);
+        if (model.children && model.children.length > 0) {
+          generateSceneGraph(model.children, level + 1);
+        }
+      });
+}
+
+generateSceneGraph(state.objects);
+
 const setColor = (gl, model) => {
     const colorBuffer = gl.createBuffer();
-    const colors = new Float32Array(model.colors.flat(1));
+    const colors = new Float32Array(model?.colors.flat(1));
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 }
 
 /* Translate X */
 transX.addEventListener('input', () => {
-    state.transform.translate[0] = transX.value / 100;
+    state.selectedObject.translate[0] = transX.value / 100;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
-    state.transform.translate[1] = transY.value / 100;
+    state.selectedObject.translate[1] = transY.value / 100;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
-    state.transform.translate[2] = -transZ.value / 100;
+    state.selectedObject.translate[2] = -transZ.value / 100;
     renderModel();
 })
 
 /* Rotate X */
 rotateX.addEventListener('input', () => {
-    state.transform.rotate[0] = (rotateX.value * Math.PI) / 100;
+    state.selectedObject.rotate[0] = (rotateX.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Y */
 rotateY.addEventListener('input', () => {
-    state.transform.rotate[1] = (rotateY.value * Math.PI) / 100;
+    state.selectedObject.rotate[1] = (rotateY.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Z */
 rotateZ.addEventListener('input', () => {
-    state.transform.rotate[2] = (rotateZ.value * Math.PI) / 100;
+    state.selectedObject.rotate[2] = (rotateZ.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Scale X */
 scaleX.addEventListener('input', () => {
-    state.transform.scale[0] = scaleX.value;
+    state.selectedObject.scale[0] = scaleX.value;
     renderModel();
 })
 
 /* Scale Y */
 scaleY.addEventListener('input', () => {
-    state.transform.scale[1] = scaleY.value;
+    state.selectedObject.scale[1] = scaleY.value;
     renderModel();
 })
 
 /* Scale Z */
 scaleZ.addEventListener('input', () => {
-    state.transform.scale[2] = scaleZ.value;
+    state.selectedObject.scale[2] = scaleZ.value;
     renderModel();
 })
 
@@ -548,30 +693,18 @@ materialRadio.forEach((radio) => {
     radio.addEventListener('change', () => {
         state.material = radio.value;
         console.log("Material: ", state.material);
-        if(state.material == "Normal"){
+        if(state.material == "Basic"){
 
-            lightAmbient.disabled=true;
-            materialColor.disabled=true;
+            lightAmbient.disabled=false;
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
             materialShininess.disabled=true;
 
-            program = createProgram(gl,vertex_shader, fragment_shader)
-        }
-        else if(state.material == "Basic"){
-
-            lightAmbient.disabled=true;
-            materialColor.disabled=false;
-            materialAmbient.disabled=true;
-            materialSpecular.disabled=true;
-            materialShininess.disabled=true;
-
-            program = createProgram(gl,vertex_shader, fragment_shader_3d);
+            program = createProgram(gl,vertex_shader, fragment_shader_basic);
         }
         else if(state.material == "Phong"){
 
             lightAmbient.disabled=false;
-            materialColor.disabled=false;
             materialAmbient.disabled=false;
             materialSpecular.disabled=false;
             materialShininess.disabled=false;
@@ -588,17 +721,6 @@ lightAmbient.addEventListener('input', () => {
     renderModel();
 })
 
-/* Change Material Color */
-materialColor.addEventListener('input', () => {
-    var hexColor = materialColor.value;
-
-    var r = parseInt(hexColor.slice(1, 3), 16);
-    var g = parseInt(hexColor.slice(3, 5), 16);
-    var b = parseInt(hexColor.slice(5, 7), 16);
-
-    state.materialColor = [r,g,b, 1.0];
-    renderModel();
-})
 
 /* Change Material Ambient */
 materialAmbient.addEventListener('input', () => {
@@ -608,6 +730,7 @@ materialAmbient.addEventListener('input', () => {
 
 /* Change Material Specualr */
 materialSpecular.addEventListener('input', () => {
+    console.log("ganti material specular ", materialSpecular.value)
     state.materialSpecular = [materialSpecular.value, materialSpecular.value, materialSpecular.value, 1.0];
     renderModel();
 })
@@ -696,8 +819,8 @@ let currentTime = 0;
 let animationSpeed = 1;
 let animationPaused = true;
 let desiredFPS = 3; // default
-let totalFrames = hollowOctahedronAnim.frames.length;
-let totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+let totalFrames = hollowAnim.frames.length;
+let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
 
@@ -706,13 +829,13 @@ animationSlider.max = totalFrames - 1;
 playPauseButton.addEventListener('click', toggleAnimation);
 fpsInput.addEventListener('input', function() {
     desiredFPS = parseInt(this.value);
-    totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+    totalAnimationTime = hollowAnim.frames.length / desiredFPS;
     console.log(desiredFPS);
 });
 
 animationSlider.addEventListener('input', function() {
     currentTime = animationSlider.value / desiredFPS;
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
     renderModel();
     if (!animationPaused) {
@@ -729,7 +852,7 @@ reverseToggle.addEventListener('change', function() {
         animationSlider.value = 0;
         currentTime = 0;
     }
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
     renderModel();
     console.log('Reverse animation:', isReversed);
@@ -830,17 +953,17 @@ function interpolateKeyframes(frames, currentTime) {
 function applyTransformations(animationData) {
     if (!animationData) return;
 
-    state.transform.translate = [
+    state.selectedObject.translate = [
         animationData.translation[0] / 100,
         animationData.translation[1] / 100,
         animationData.translation[2] / 100
     ];
-    state.transform.rotate = [
+    state.selectedObject.rotate = [
         animationData.rotation[0] * Math.PI / 100,
         animationData.rotation[1] * Math.PI / 100,
         animationData.rotation[2] * Math.PI / 100
     ]
-    state.transform.scale = animationData.scale;
+    state.selectedObject.scale = animationData.scale;
     renderModel();
 }
 
@@ -853,7 +976,7 @@ function animate() {
 
     updateAnimationTime(deltaTime * desiredFPS);
 
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
 
     renderModel();
@@ -867,6 +990,7 @@ window.onload = () => {
         alert("WebGL not available!");
     } else {
         state.chosenColor = [1, 0, 0];
+        state.selectedObject = state.objects[0];
         renderModel();
     }
 };
