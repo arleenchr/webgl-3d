@@ -6,7 +6,7 @@ duck.model = generateCuboid(0.5, 0.5, 0.55, [0, 0, 0]);
 
 const duckHead = new Object();
 duckHead.name = 'head'; // 0.35
-duckHead.model = generateCuboid(0.35, 0.35, 0.3, [0, 0.6, -0.25]);
+duckHead.model = generateCuboid(0.35, 0.3, 0.3, [0, 0.6, -0.25]);
 duckHead.setParent(duck);
 
 const duckBeak = new Object();
@@ -31,7 +31,7 @@ duckTail.setParent(duckLowerBody);
 
 const duckLeg1 = new Object();
 duckLeg1.name = 'leg-1';
-duckLeg1.model = generateCuboid(0.5, 0.1, 0.15, [0.1, -0.5, 0]);
+duckLeg1.model = generateCuboid(0.5, 0.1, 0.1, [0.1, -0.5, 0]);
 duckLeg1.setParent(duck);
 
 const duckLeg2 = new Object();
