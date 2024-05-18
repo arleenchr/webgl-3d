@@ -29,10 +29,9 @@ const setInitialState = () => {
         projection: "orthographic", // Default
         phi: 10.0, 
         theta: 5.0,
-        material: "Normal",
+        material: "Basic",
         radius: 1.0,
         lightAmbient: [0.03, 0.03, 0.03, 1],
-        materialColor: [1, 1, 1, 1],
         materialAmbient: [1, 1, 1, 1],
         materialSpecular: [1, 1, 1, 1],
         shine: 30.0,
@@ -67,7 +66,6 @@ const resetCamera = document.getElementById('reset-camera-button');
 
 //material 
 const lightAmbient = document.getElementById("light-ambient");
-const materialColor = document.getElementById("material-color");
 const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
 const materialShininess = document.getElementById("material-shininess");
@@ -77,7 +75,7 @@ let lastMouseX = null;
 let lastMouseY = null;
 
 
-var program = createProgram(gl, vertex_shader, fragment_shader);
+var program = createProgram(gl, vertex_shader, fragment_shader_basic);
 
 const renderModel = () => {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -125,24 +123,25 @@ const renderModel = () => {
     gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
 
     // Set material of model
-    if(state.material == "Normal"){
+    if(state.material == "Basic"){
         setColor(gl, state.model);
         const vertColor = gl.getAttribLocation(program, "aColor");
         gl.enableVertexAttribArray(vertColor);
         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
-    }
-    else if(state.material == "Basic"){
-        console.log("ini basicccccc")
 
-        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-        gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
-
-        // Change light ambient to a subtle blue color
         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-        gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
+        gl.uniform4fv(lightAmbient, state.lightAmbient);
+
+        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+        gl.uniform4fv(materialAmbient, state.materialAmbient);
     }
     else if(state.material == "Phong"){
         console.log("ini phonggggg")
+
+        setColor(gl, state.model);
+        const vertColor = gl.getAttribLocation(program, "aColor");
+        gl.enableVertexAttribArray(vertColor);
+        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
         gl.uniform3fv(lightDirection, [-1,1,-1]);
@@ -155,9 +154,6 @@ const renderModel = () => {
 
         var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
         gl.uniform4fv(lightSpecular, [1,1,1,1]);
-
-        var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
-        gl.uniform4fv(materialDiffuse, state.materialColor);
         
         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
         gl.uniform4fv(materialAmbient, state.materialAmbient);
@@ -525,30 +521,18 @@ materialRadio.forEach((radio) => {
     radio.addEventListener('change', () => {
         state.material = radio.value;
         console.log("Material: ", state.material);
-        if(state.material == "Normal"){
+        if(state.material == "Basic"){
 
-            lightAmbient.disabled=true;
-            materialColor.disabled=true;
+            lightAmbient.disabled=false;
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
             materialShininess.disabled=true;
 
-            program = createProgram(gl,vertex_shader, fragment_shader)
-        }
-        else if(state.material == "Basic"){
-
-            lightAmbient.disabled=true;
-            materialColor.disabled=false;
-            materialAmbient.disabled=true;
-            materialSpecular.disabled=true;
-            materialShininess.disabled=true;
-
-            program = createProgram(gl,vertex_shader, fragment_shader_3d);
+            program = createProgram(gl,vertex_shader, fragment_shader_basic);
         }
         else if(state.material == "Phong"){
 
             lightAmbient.disabled=false;
-            materialColor.disabled=false;
             materialAmbient.disabled=false;
             materialSpecular.disabled=false;
             materialShininess.disabled=false;
@@ -565,17 +549,6 @@ lightAmbient.addEventListener('input', () => {
     renderModel();
 })
 
-/* Change Material Color */
-materialColor.addEventListener('input', () => {
-    var hexColor = materialColor.value;
-
-    var r = parseInt(hexColor.slice(1, 3), 16);
-    var g = parseInt(hexColor.slice(3, 5), 16);
-    var b = parseInt(hexColor.slice(5, 7), 16);
-
-    state.materialColor = [r,g,b, 1.0];
-    renderModel();
-})
 
 /* Change Material Ambient */
 materialAmbient.addEventListener('input', () => {

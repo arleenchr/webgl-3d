@@ -834,7 +834,7 @@ create3dModel(octahedronContent, octahedronVertices);
 //     if (err) throw err;
 //     console.log('The pyramid model file has been saved!');
 // });
-fs.writeFile('../models/octahedron-model.json', JSON.stringify(octahedronContent), (err) => {
+fs.writeFile('d:/Kuliah/Semester 6/tugas-besar-grafkom-2-abcv/src/'+'/models/octahedron-model.json', JSON.stringify(octahedronContent), (err) => {
     if (err) throw err;
     console.log('The octahedron model file has been saved!');
 });
