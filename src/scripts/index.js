@@ -35,7 +35,7 @@ const setInitialState = () => {
         materialColor: [1, 1, 1, 1],
         materialAmbient: [1, 1, 1, 1],
         materialSpecular: [1, 1, 1, 1],
-        shine: 32.0,
+        shine: 30.0,
     }
 }
 
@@ -70,6 +70,7 @@ const lightAmbient = document.getElementById("light-ambient");
 const materialColor = document.getElementById("material-color");
 const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
+const materialShininess = document.getElementById("material-shininess");
 
 let mouseDown = false;
 let lastMouseX = null;
@@ -163,6 +164,9 @@ const renderModel = () => {
 
         var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
         gl.uniform4fv(materialSpecular, state.materialSpecular);
+
+        var shininess = gl.getUniformLocation(program, "shininess");
+        gl.uniform1f(shininess, state.shine);
     }
 
     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
@@ -527,6 +531,7 @@ materialRadio.forEach((radio) => {
             materialColor.disabled=true;
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
+            materialShininess.disabled=true;
 
             program = createProgram(gl,vertex_shader, fragment_shader)
         }
@@ -536,6 +541,7 @@ materialRadio.forEach((radio) => {
             materialColor.disabled=false;
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
+            materialShininess.disabled=true;
 
             program = createProgram(gl,vertex_shader, fragment_shader_3d);
         }
@@ -545,6 +551,7 @@ materialRadio.forEach((radio) => {
             materialColor.disabled=false;
             materialAmbient.disabled=false;
             materialSpecular.disabled=false;
+            materialShininess.disabled=false;
 
             program = createProgram(gl,vertex_shader, fragment_shader_phong);
         }
@@ -579,6 +586,12 @@ materialAmbient.addEventListener('input', () => {
 /* Change Material Specualr */
 materialSpecular.addEventListener('input', () => {
     state.materialSpecular = [materialSpecular.value, materialSpecular.value, materialSpecular.value, 1.0];
+    renderModel();
+})
+
+/* Change Material Shininess */
+materialShininess.addEventListener('input', () => {
+    state.shine = materialShininess.value;
     renderModel();
 })
 

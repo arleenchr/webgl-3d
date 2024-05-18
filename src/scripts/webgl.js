@@ -45,6 +45,7 @@ void main(void) {
 const fragment_shader_phong = `
 precision mediump float;
 
+uniform float shininess;
 uniform vec3 uLightDirection; 
 uniform vec4 uLightAmbient; 
 uniform vec4 uLightDiffuse; 
@@ -66,7 +67,7 @@ void main(void) {
         Id = uLightDiffuse * uMaterialDiffuse * lambertTerm;
         vec3 E = normalize(vEyeVec);
         vec3 R = reflect(L, N);
-        float specular = pow( max(dot(R, E), 0.0), 30.0);
+        float specular = pow( max(dot(R, E), 0.0), shininess);
         Is = uLightSpecular * uMaterialSpecular * specular;
     }
     gl_FragColor = Ia + Id + Is;
