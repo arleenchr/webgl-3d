@@ -778,8 +778,8 @@ let currentTime = 0;
 let animationSpeed = 1;
 let animationPaused = true;
 let desiredFPS = 3; // default
-let totalFrames = hollowOctahedronAnim.frames.length;
-let totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+let totalFrames = hollowAnim.frames.length;
+let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
 
@@ -788,13 +788,13 @@ animationSlider.max = totalFrames - 1;
 playPauseButton.addEventListener('click', toggleAnimation);
 fpsInput.addEventListener('input', function() {
     desiredFPS = parseInt(this.value);
-    totalAnimationTime = hollowOctahedronAnim.frames.length / desiredFPS;
+    totalAnimationTime = hollowAnim.frames.length / desiredFPS;
     console.log(desiredFPS);
 });
 
 animationSlider.addEventListener('input', function() {
     currentTime = animationSlider.value / desiredFPS;
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
     renderModel();
     if (!animationPaused) {
@@ -811,7 +811,7 @@ reverseToggle.addEventListener('change', function() {
         animationSlider.value = 0;
         currentTime = 0;
     }
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
     renderModel();
     console.log('Reverse animation:', isReversed);
@@ -912,17 +912,17 @@ function interpolateKeyframes(frames, currentTime) {
 function applyTransformations(animationData) {
     if (!animationData) return;
 
-    state.transform.translate = [
+    state.selectedObject.translate = [
         animationData.translation[0] / 100,
         animationData.translation[1] / 100,
         animationData.translation[2] / 100
     ];
-    state.transform.rotate = [
+    state.selectedObject.rotate = [
         animationData.rotation[0] * Math.PI / 100,
         animationData.rotation[1] * Math.PI / 100,
         animationData.rotation[2] * Math.PI / 100
     ]
-    state.transform.scale = animationData.scale;
+    state.selectedObject.scale = animationData.scale;
     renderModel();
 }
 
@@ -935,7 +935,7 @@ function animate() {
 
     updateAnimationTime(deltaTime * desiredFPS);
 
-    const interpolatedFrame = interpolateKeyframes(hollowOctahedronAnim.frames, currentTime);
+    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
     applyTransformations(interpolatedFrame);
 
     renderModel();
