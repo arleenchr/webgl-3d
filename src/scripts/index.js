@@ -310,6 +310,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             state.selectedObject = state.objects[0];
+            resetSceneGraph();
+            generateSceneGraph(state.objects);
             renderModel();
 
             modelOptions.forEach(opt => opt.classList.remove("selected"));
@@ -569,6 +571,10 @@ function generateSceneGraph (models, level = 0){
           generateSceneGraph(model.children, level + 1);
         }
       });
+}
+
+function resetSceneGraph() {
+    graphContainer.innerHTML = "";
 }
 
 generateSceneGraph(state.objects);
