@@ -63,4 +63,4 @@ var vectors = {
     }
 }
 
-module.exports = vectors;
+// module.exports = vectors;
