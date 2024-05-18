@@ -912,17 +912,17 @@ function interpolateKeyframes(frames, currentTime) {
 function applyTransformations(animationData) {
     if (!animationData) return;
 
-    state.transform.translate = [
+    state.selectedObject.translate = [
         animationData.translation[0] / 100,
         animationData.translation[1] / 100,
         animationData.translation[2] / 100
     ];
-    state.transform.rotate = [
+    state.selectedObject.rotate = [
         animationData.rotation[0] * Math.PI / 100,
         animationData.rotation[1] * Math.PI / 100,
         animationData.rotation[2] * Math.PI / 100
     ]
-    state.transform.scale = animationData.scale;
+    state.selectedObject.scale = animationData.scale;
     renderModel();
 }
 
