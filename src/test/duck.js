@@ -49,6 +49,6 @@ duckFeet2.name = 'feet-2';
 duckFeet2.model = generateCuboid(0.1, 0.15, 0.2, [-0.1, -0.75, -0.02]);
 duckFeet2.setParent(duckLeg2);
 
-var endObject = [
+var duckObject = [
     duck,
 ]

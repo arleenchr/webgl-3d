@@ -282,7 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let selectedOption = option.querySelector(".model-option-text").innerText;
             selectButtonText.innerText = selectedOption;
             selectModelContainer.classList.remove("active");
-
             
             if (selectedOption === "Cube") {
                 state.objects = endObject;
@@ -293,11 +292,14 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (selectedOption === "Octahedron") {
                 state.objects = octahedronObject;
             }
+            else if (selectedOption === "Tube") {
+                state.objects = tubeObject;
+            }
             else if (selectedOption === "Wolf") {
                 state.objects = wolfObject;
             }
-            else if (selectedOption === "Tube") {
-                state.objects = tubeObject;
+            else if (selectedOption === "Duck") {
+                state.objects = duckObject;
             }
 
             state.selectedObject = state.objects[0];
