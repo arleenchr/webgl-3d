@@ -14,10 +14,13 @@ uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
 uniform mat4 uNormalMatrix;
 
+varying vec3 vEyeVec; 
+
 void main(void) {
     vec4 transformedPos = uTransformationMatrix * vec4(aPosition, 1.0);
     vec4 transformedNormal = uTransformationMatrix * vec4(aNormal, 1.0);
     vec4 projectedPos = uProjectionMatrix * transformedPos;
+    vEyeVec = -vec3(transformedPos);
     if (fudgeFactor < 0.01)
         gl_Position = projectedPos;
     else {
@@ -33,42 +36,50 @@ void main(void) {
 
 const fragment_shader_3d = `
 precision mediump float;
-
-varying vec4 vNormal;
-varying float colorFactor;
-
-uniform vec4 userColor;
-uniform vec3 uReverseLightDirection;
-
+uniform vec4 uLightAmbient; 
+uniform vec4 uMaterialAmbient;
 void main(void) {
-    float light = dot(vNormal.xyz, uReverseLightDirection);
-    gl_FragColor =userColor;
-    //add the ambience light
-    gl_FragColor.rgb *= (light);
+    gl_FragColor = uLightAmbient * uMaterialAmbient;
 }
 `;
 const fragment_shader_phong = `
 precision mediump float;
 
+uniform float shininess;
+uniform vec3 uLightDirection; 
+uniform vec4 uLightAmbient; 
+uniform vec4 uLightDiffuse; 
+uniform vec4 uLightSpecular;
+uniform vec4 uMaterialAmbient;
+uniform vec4 uMaterialDiffuse; 
+uniform vec4 uMaterialSpecular;
 varying vec4 vNormal;
-varying float colorFactor;
-
-uniform vec4 userColor;
-uniform vec3 uReverseLightDirection;
+varying vec3 vEyeVec;
 
 void main(void) {
-    float light = dot(vNormal.xyz, uReverseLightDirection);
-    gl_FragColor = userColor;
-    //add the ambience light
-    gl_FragColor.rgb *= (light);
+    vec3 L = normalize(uLightDirection); 
+    vec3 N = normalize(vNormal.xyz); 
+    float lambertTerm = dot(N,-L);
+    vec4 Ia = uLightAmbient * uMaterialAmbient;
+    vec4 Id = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 Is = vec4(0.0, 0.0, 0.0, 1.0);
+    if(lambertTerm > 0.0) {
+        Id = uLightDiffuse * uMaterialDiffuse * lambertTerm;
+        vec3 E = normalize(vEyeVec);
+        vec3 R = reflect(L, N);
+        float specular = pow( max(dot(R, E), 0.0), shininess);
+        Is = uLightSpecular * uMaterialSpecular * specular;
+    }
+    gl_FragColor = Ia + Id + Is;
 }
+
 `
 const fragment_shader = `
 precision mediump float;
-varying vec4 fragColor;
-
+uniform vec4 uLightAmbient; 
+uniform vec4 uMaterialAmbient;
 void main(void) {
-    gl_FragColor = fragColor;
+    gl_FragColor = uLightAmbient * uMaterialAmbient;
 }
 `;
 
