@@ -244,7 +244,34 @@ const setProjectionMat = (proj, far, near, theta, phi, radius) => {
     }
 }
 
+// Scene Graph
+let graphContainer = document.getElementById('graph-container');
 
+function generateSceneGraph (models, level = 0){
+    const padding = "padding-left: " + level * 20 + "px;";
+    let idx = 0;
+    models.forEach((model) => {
+        let graphComponent = document.createElement("p");
+        graphComponent.className = "graph-component";
+        graphComponent.style = padding;
+        graphComponent.innerHTML += `
+          <p class="graph-component-name">${model.name}</p>`;
+        graphComponent.addEventListener("click", () => {
+          state.focus = model;
+          state.selectedObject = model;
+          console.log("select model")
+          console.log(state.selectedObject);
+        });
+        graphContainer.appendChild(graphComponent);
+        if (model.children && model.children.length > 0) {
+          generateSceneGraph(model.children, level + 1);
+        }
+      });
+}
+
+generateSceneGraph(state.objects);
+
+// Color
 const setColor = (gl, model) => {
     const colorBuffer = gl.createBuffer();
     const colors = new Float32Array(model.colors.flat(1));
