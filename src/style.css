@@ -37,7 +37,7 @@
     align-self: left;
 }
 .load-button{
-    width: 100%;
+    width: 40%;
     border: none;
     background-color: #189ee6;
     color: white;
@@ -45,6 +45,67 @@
     padding: 1.5vh;
     margin-bottom: 1.5rem;
 }
+
+.select-model-container {
+    line-height: 0%;
+    width: 100%;
+    height: fit-content;
+    margin-top: 5vh;
+    position: relative;
+}
+.select-button {
+    display: flex;
+    height: fit-content;
+    width: 40%;
+    background: #646f75;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+.select-button i {
+    font-size: 25px;
+    color: #ffffff;
+}
+
+.model-options {
+    position: absolute;
+    width:40%;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin-top: 1vh;
+    border-radius: 8px;
+    background: #646f75;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.model-option {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    background: #646f75;
+    padding: 10px 20px;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.model-option-text {
+    width: inherit;
+    background-color: transparent;
+}
+.select-model-container.active .model-options {
+    display: block;
+}
+/* .select-model-container.active .model-options {
+    display: block;
+} */
 
 .model-input {
     margin-top: 1.5rem;
@@ -117,8 +178,13 @@
     color: white;
 }
 
+.color-container {
+    display: flex;
+    flex-direction: row;
+}
 .color-checkbox {
     margin-top: 0.75rem;
+    margin-right: 2rem;
 }
 
 .container-right{

@@ -2,7 +2,8 @@ var state;
 
 const setInitialState = () => {
     state = {
-        objects: endObject,
+        objects: wolfObject,
+        // objects: endObject,
         viewMatrix: {
             // x, y, z
             camera: [0, 0, 1], 
@@ -301,6 +302,16 @@ const setColor = (gl, model) => {
 
 transX.addEventListener('input', () => {
     state.selectedObject.translate[0] = transX.value / 100;
+    renderModel();
+})
+
+transY.addEventListener('input', () => {
+    state.selectedObject.translate[1] = transY.value / 100;
+    renderModel();
+})
+
+transZ.addEventListener('input', () => {
+    state.selectedObject.translate[2] = transZ.value / 100;
     renderModel();
 })
 

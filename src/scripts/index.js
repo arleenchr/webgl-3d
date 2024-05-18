@@ -171,8 +171,31 @@ const renderModel = () => {
 
     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const selectModelContainer = document.querySelector(".select-model-container");
+    const selectButton = document.querySelector(".select-button");
+    const modelOptions = document.querySelectorAll(".model-option");
+    const selectButtonText = document.querySelector(".select-button-text");
 
-// Input model from JSON file
+    selectButton.addEventListener("click", () => {
+        console.log("kepencet")
+        selectModelContainer.classList.toggle("active");
+    });
+
+    modelOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            let selectedOption = option.querySelector(".model-option-text").innerText;
+            selectButtonText.innerText = selectedOption;
+            selectModelContainer.classList.remove("active");
+
+            modelOptions.forEach(opt => opt.classList.remove("selected"));
+            option.classList.add("selected");
+        });
+    });
+});
+
+
+Input model from JSON file
 modelInput.addEventListener("change", () => {
     const file = modelInput.files[0];
 
