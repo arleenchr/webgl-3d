@@ -10,6 +10,8 @@ var state;
 // Set initial state for webgl canvas
 const setInitialState = () => {
     state = {
+        objects: endObject,
+        selectedObject: null,
         model: newModel,
         chosenColor: [1, 0, 0],
         transform: {
@@ -77,7 +79,99 @@ let lastMouseY = null;
 
 var program = createProgram(gl, vertex_shader, fragment_shader_basic);
 
+const renderObject = (objects) => {
+    objects.forEach(obj => {
+        gl.useProgram(program);
+
+        const view = setViewMat(state.viewMatrix);
+        
+        // Set up the geometry of the object
+        const geometry = setObjGeometry(gl, obj.model, view); 
+        
+        // Set up the transformation matrix
+        const transform = obj.worldMatrix;
+        
+        // Set up the projection matrix
+        const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
+        
+        console.log("View: ", view);
+        console.log("Projection: ", projection);
+        // Set the transformation matrix uniform
+        const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
+        gl.uniformMatrix4fv(uTransform, false, transform);
+        
+        // Set the projection matrix uniform
+        const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
+        gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+        
+        
+        // Calculate normal matrix
+        var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
+        let modelMatrix = matrices.multiply(view, transform);
+        let nMatrix = matrices.inverse(modelMatrix);
+        nMatrix = matrices.transpose(nMatrix);
+        
+        gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
+        
+        // Set material of model
+        if(state.material == "Normal"){
+            setColor(gl, obj.model);
+            const vertColor = gl.getAttribLocation(program, "aColor");
+            gl.enableVertexAttribArray(vertColor);
+            gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+        }
+        else if(state.material == "Basic"){
+            console.log("ini basicccccc")
+        
+            var userColor = gl.getUniformLocation(program, "userColor");
+            gl.uniform4fv(userColor, [1,0,0,1]);
+        
+            var reverseLightDirectionLocation = gl.getUniformLocation(
+            program,
+            "uReverseLightDirection"
+            );
+        
+            normalizeLight = matrices.normalize([0.5, 0.7, 1]);
+            console.log("Normalize Light: ", normalizeLight)
+            gl.uniform3fv(
+                reverseLightDirectionLocation,
+                matrices.normalize(normalizeLight)
+            );
+        }
+    
+        gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
+
+        if (obj.children.length > 0) {
+            renderObject(obj.children);
+        }
+    });
+}
+
 const renderModel = () => {
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Clear canvas first
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Enable face culling
+    gl.enable(gl.CULL_FACE);
+
+    // Enable depth testing
+    gl.enable(gl.DEPTH_TEST);
+
+    console.log("STATE OBJECT:", state.objects[0]);
+
+    console.log("TYPE", typeof state.objects[0]);
+
+    state.objects[0].computeWorldMatrix();
+
+    renderObject(state.objects);
+    console.log(state);
+    
+}
+
+const renderModel2 = () => {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     // Clear canvas first
@@ -169,47 +263,52 @@ const renderModel = () => {
 }
 
 // Input model from JSON file
-modelInput.addEventListener("change", () => {
-    const file = modelInput.files[0];
+// modelInput.addEventListener("change", () => {
+//     const file = modelInput.files[0];
 
-    // Check file extension
-    if (file.type !== "application/json") {
-        alert("Wrong file extension! Please upload a file with JSON extension!");
+//     // Check file extension
+//     if (file.type !== "application/json") {
+//         alert("Wrong file extension! Please upload a file with JSON extension!");
 
-        // Disable the color checkbox
-        document.getElementById('color-button').disabled = true;
-        return;
-    }
+//         // Disable the color checkbox
+//         document.getElementById('color-button').disabled = true;
+//         return;
+//     }
   
-    // Read file
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const text = e.target.result;
-        const color = state.chosenColor;
+//     // Read file
+//     const reader = new FileReader();
+//     reader.onload = (e) => {
+//         const text = e.target.result;
+//         const color = state.chosenColor;
 
-        // Set initial state
-        setInitialState();
+//         // Set initial state
+//         setInitialState();
 
-        // Clear canvas first
-        gl.clearColor(1.0, 1.0, 1.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//         // Clear canvas first
+//         gl.clearColor(1.0, 1.0, 1.0, 1.0);
+//         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Load object
-        state.model = JSON.parse(text);
-        // console.log("Test HOHO", state.model);
-        state.chosenColor = color;
+//         // Load object
+//         let obj = new Object();
+//         obj = JSON.parse(text);
+//         state.objects = obj;
 
-        // Enable or disable the checkbox
-        if (state.model.vertices.length > 0) {
-            document.getElementById('color-button').disabled = false;
-        } else {
-            document.getElementById('color-button').disabled = true;
-        }
+//         console.log(state);
 
-        renderModel();
-    };
-    reader.readAsText(file);    
-});
+//         state.chosenColor = color;
+//         state.selectedObject = state.objects[0];
+
+//         // Enable or disable the checkbox
+//         if (state.objects.length > 0) {
+//             document.getElementById('color-button').disabled = false;
+//         } else {
+//             document.getElementById('color-button').disabled = true;
+//         }
+
+//         renderModel();
+//     };
+//     reader.readAsText(file);    
+// });
 
 colorCheckbox.addEventListener("change", () => {
     console.log(state.model.colors);
@@ -268,11 +367,11 @@ const setObjGeometry = (gl, model) => {
     console.log("Model", model);
 
     // Flatten to be used
-    const vertices = new Float32Array(model.vertices.flat(1));
+    const vertices = new Float32Array(model?.vertices.flat(1));
 
     // -1 to convert to 0-based index since the faces are 1-based index
-    const normals = new Float32Array(model.normals.flat(1));
-    const faces = new Uint16Array(model.faces.flat(1).map((x) => x - 1));
+    const normals = new Float32Array(model?.normals.flat(1));
+    const faces = new Uint16Array(model?.faces.flat(1).map((x) => x - 1));
     
     const vertexBuff = gl.createBuffer();
     if (!vertexBuff) { 
@@ -299,7 +398,7 @@ const setObjGeometry = (gl, model) => {
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuff);
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
   
-    console.log("LenFaces HOHO:", faces.length);
+    // console.log("LenFaces HOHO:", faces.length);
     return { vertexBuff: vertexBuff, normalBuff: normalBuff, faceBuff: faceBuff, lenFaces: faces.length };
 }
 
@@ -383,64 +482,97 @@ const setProjectionMat = (proj, far, near, theta, phi, radius) => {
     }
 }
 
+// Scene Graph
+let graphContainer = document.getElementById('graph-container');
+let selectedComponent = null;
+
+function generateSceneGraph (models, level = 0){
+    const padding = "padding-left: " + level * 20 + "px;";
+    let idx = 0;
+    models.forEach((model) => {
+        let graphComponent = document.createElement("p");
+        graphComponent.className = "graph-component";
+        graphComponent.style = padding;
+        graphComponent.innerHTML += `
+            <p class="graph-component-name">${model.name}</p>`;
+        graphComponent.addEventListener("click", () => {
+            if (selectedComponent) {
+                selectedComponent.classList.remove("selected");
+            }
+            graphComponent.classList.add("selected");
+            selectedComponent = graphComponent;
+            state.focus = model;
+            state.selectedObject = model;
+            console.log("select model")
+            console.log(state.selectedObject);
+        });
+        graphContainer.appendChild(graphComponent);
+        if (model.children && model.children.length > 0) {
+          generateSceneGraph(model.children, level + 1);
+        }
+      });
+}
+
+generateSceneGraph(state.objects);
+
 const setColor = (gl, model) => {
     const colorBuffer = gl.createBuffer();
-    const colors = new Float32Array(model.colors.flat(1));
+    const colors = new Float32Array(model?.colors.flat(1));
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 }
 
 /* Translate X */
 transX.addEventListener('input', () => {
-    state.transform.translate[0] = transX.value / 100;
+    state.selectedObject.translate[0] = transX.value / 100;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
-    state.transform.translate[1] = transY.value / 100;
+    state.selectedObject.translate[1] = transY.value / 100;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
-    state.transform.translate[2] = -transZ.value / 100;
+    state.selectedObject.translate[2] = -transZ.value / 100;
     renderModel();
 })
 
 /* Rotate X */
 rotateX.addEventListener('input', () => {
-    state.transform.rotate[0] = (rotateX.value * Math.PI) / 100;
+    state.selectedObject.rotate[0] = (rotateX.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Y */
 rotateY.addEventListener('input', () => {
-    state.transform.rotate[1] = (rotateY.value * Math.PI) / 100;
+    state.selectedObject.rotate[1] = (rotateY.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Rotate Z */
 rotateZ.addEventListener('input', () => {
-    state.transform.rotate[2] = (rotateZ.value * Math.PI) / 100;
+    state.selectedObject.rotate[2] = (rotateZ.value * Math.PI) / 100;
     renderModel();
 })
 
 /* Scale X */
 scaleX.addEventListener('input', () => {
-    state.transform.scale[0] = scaleX.value;
+    state.selectedObject.scale[0] = scaleX.value;
     renderModel();
 })
 
 /* Scale Y */
 scaleY.addEventListener('input', () => {
-    state.transform.scale[1] = scaleY.value;
+    state.selectedObject.scale[1] = scaleY.value;
     renderModel();
 })
 
 /* Scale Z */
 scaleZ.addEventListener('input', () => {
-    state.transform.scale[2] = scaleZ.value;
+    state.selectedObject.scale[2] = scaleZ.value;
     renderModel();
 })
 
@@ -817,6 +949,7 @@ window.onload = () => {
         alert("WebGL not available!");
     } else {
         state.chosenColor = [1, 0, 0];
+        state.selectedObject = state.objects[0];
         renderModel();
     }
 };
