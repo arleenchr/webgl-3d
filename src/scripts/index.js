@@ -296,6 +296,9 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (selectedOption === "Wolf") {
                 state.objects = wolfObject;
             }
+            else if (selectedOption === "Tube") {
+                state.objects = tubeObject;
+            }
 
             state.selectedObject = state.objects[0];
             resetSceneGraph();
@@ -970,19 +973,77 @@ function interpolateKeyframes(frames, currentTime) {
 function applyTransformations(animationData) {
     if (!animationData) return;
 
-    state.selectedObject.translate = [
+    state.objects[0].translate = [
         animationData.translation[0] / 100,
         animationData.translation[1] / 100,
         animationData.translation[2] / 100
     ];
-    state.selectedObject.rotate = [
+    state.objects[0].rotate = [
         animationData.rotation[0] * Math.PI / 100,
         animationData.rotation[1] * Math.PI / 100,
         animationData.rotation[2] * Math.PI / 100
     ]
-    state.selectedObject.scale = animationData.scale;
+    state.objects[0].scale = animationData.scale;
     renderModel();
 }
+
+function interpolateArticulatedFrames(frames, currentTime) {
+    let prevFrameIndex = Math.floor(currentTime);
+    let nextFrameIndex = Math.ceil(currentTime);
+    let prevFrame = frames[prevFrameIndex];
+    let nextFrame = frames[nextFrameIndex];
+
+    if (!prevFrame || !nextFrame) {
+        return null;
+    }
+
+    let interpolatedFrame = {
+        translate: [
+            lerp(prevFrame.translate[0], nextFrame.translate[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.translate[1], nextFrame.translate[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.translate[2], nextFrame.translate[2], currentTime - prevFrameIndex)
+        ],
+        rotate: [
+            lerp(prevFrame.rotate[0], nextFrame.rotate[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.rotate[1], nextFrame.rotate[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.rotate[2], nextFrame.rotate[2], currentTime - prevFrameIndex)
+        ],
+        scale: [
+            lerp(prevFrame.scale[0], nextFrame.scale[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.scale[1], nextFrame.scale[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.scale[2], nextFrame.scale[2], currentTime - prevFrameIndex)
+        ]
+    };
+
+    return interpolatedFrame;
+}
+
+function applyAnimationToArticulatedModel(object) {
+    if (object.frames.length != 0) {
+        const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
+
+        object.translate = [
+            interpolatedFrame.translate[0],
+            interpolatedFrame.translate[1],
+            interpolatedFrame.translate[2] 
+        ];
+        object.rotate = [
+            interpolatedFrame.rotate[0],
+            interpolatedFrame.rotate[1],
+            interpolatedFrame.rotate[2] 
+        ]
+        object.scale = interpolatedFrame.scale;
+    }
+
+    if (object.children.length > 0) {
+        object.children.forEach(child => {
+            applyAnimationToArticulatedModel(child);
+        });
+    }
+}
+
+let hollowModel = ["pyramid", "octahedron"];
+let articulatedModel = ["cube", "wolf", "tube"];
 
 function animate() {
     if (animationPaused) return;
@@ -993,8 +1054,16 @@ function animate() {
 
     updateAnimationTime(deltaTime * desiredFPS);
 
-    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
-    applyTransformations(interpolatedFrame);
+    if (hollowModel.includes(state.objects[0].name)) {
+        const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+        applyTransformations(interpolatedFrame);
+    }
+    else {
+        totalFrames = state.objects[0].frames.length;
+        totalAnimationTime = 10;
+        applyAnimationToArticulatedModel(state.objects[0]);
+    }
+    
 
     renderModel();
     requestAnimationFrame(animate);
