@@ -59,6 +59,14 @@ const cameraRadius = document.getElementById('radius-slider');
 
 const resetCamera = document.getElementById('reset-camera-button');
 
+//material 
+const lightColor = document.getElementById("light-color");
+const lightAmbient = document.getElementById("light-ambient");
+const lightSpecular = document.getElementById("light-specular");
+const materialColor = document.getElementById("material-color");
+const materialAmbient = document.getElementById("material-ambient");
+const materialDiffuse = document.getElementById("material-diffuse");
+
 let mouseDown = false;
 let lastMouseX = null;
 let lastMouseY = null;
@@ -123,20 +131,44 @@ const renderModel = () => {
     else if(state.material == "Basic"){
         console.log("ini basicccccc")
 
-        var userColor = gl.getUniformLocation(program, "userColor");
-        gl.uniform4fv(userColor, [1,0,0,1]);
+        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+        gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
 
-        var reverseLightDirectionLocation = gl.getUniformLocation(
-        program,
-        "uReverseLightDirection"
-        );
+        // Change light ambient to a subtle blue color
+        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+        gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
+    }
+    else if(state.material == "Phong"){
+        console.log("ini phonggggg")
 
-        normalizeLight = matrices.normalize([0.5, 0.7, 1]);
-        console.log("Normalize Light: ", normalizeLight)
-        gl.uniform3fv(
-            reverseLightDirectionLocation,
-            matrices.normalize(normalizeLight)
-        );
+        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+        gl.uniform3fv(lightDirection, [0.0, -1.0, 1.0]);
+
+        // Change light ambient to a subtle blue color
+        //get light ambient
+        
+        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+        gl.uniform4fv(lightAmbient, [0.2, 0.2, 0.6, 1.0]);
+
+        // Change light diffuse to a soft white color
+        var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+        gl.uniform4fv(lightDiffuse, [0.8, 0.8, 0.8, 1.0]);
+
+        // Change light specular to a bright blue color
+        var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+        gl.uniform4fv(lightSpecular, [0.3, 0.3, 1.0, 1.0]);
+
+        // Change material ambient to a green color
+        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+        gl.uniform4fv(materialAmbient, [0.0, 0.5, 0.0, 1.0]);
+
+        // Change material diffuse to a yellow-green color
+        var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
+        gl.uniform4fv(materialDiffuse, [0.5, 0.8, 0.1, 1.0]);
+
+        // Change material specular to a subtle white color
+        var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+        gl.uniform4fv(materialSpecular, [0.9, 0.9, 0.9, 1.0]);
     }
 
     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
@@ -396,14 +428,113 @@ materialRadio.forEach((radio) => {
         console.log("Material: ", state.material);
         if(state.material == "Normal"){
             // renderModel();
+            const lightColor = document.getElementById("light-color");
+            const lightAmbient = document.getElementById("light-ambient");
+            const lightSpecular = document.getElementById("light-specular");
+            const materialColor = document.getElementById("material-color");
+            const materialAmbient = document.getElementById("material-ambient");
+            const materialDiffuse = document.getElementById("material-diffuse");
+
+            lightColor.disabled=true;
+            lightAmbient.disabled=true;
+            lightSpecular.disabled=true;
+            materialColor.disabled=true;
+            materialAmbient.disabled=true;
+            materialDiffuse.disabled=true;
+
             program = createProgram(gl,vertex_shader, fragment_shader)
         }
         else if(state.material == "Basic"){
             console.log("ini basicc material")
+            const lightColor = document.getElementById("light-color");
+            const lightAmbient = document.getElementById("light-ambient");
+            const lightSpecular = document.getElementById("light-specular");
+            const materialColor = document.getElementById("material-color");
+            const materialAmbient = document.getElementById("material-ambient");
+            const materialDiffuse = document.getElementById("material-diffuse");
+
+            lightColor.disabled=false;
+            lightAmbient.disabled=true;
+            lightSpecular.disabled=true;
+            materialColor.disabled=false;
+            materialAmbient.disabled=true;
+            materialDiffuse.disabled=true;
             program = createProgram(gl,vertex_shader, fragment_shader_3d);
+        }
+        else if(state.material == "Phong"){
+            console.log("ini phong material")
+            const lightColor = document.getElementById("light-color");
+            const lightAmbient = document.getElementById("light-ambient");
+            const lightSpecular = document.getElementById("light-specular");
+            const materialColor = document.getElementById("material-color");
+            const materialAmbient = document.getElementById("material-ambient");
+            const materialDiffuse = document.getElementById("material-diffuse");
+
+            lightColor.disabled=false;
+            lightAmbient.disabled=false;
+            lightSpecular.disabled=false;
+            materialColor.disabled=false;
+            materialAmbient.disabled=false;
+            materialDiffuse.disabled=false;
+            program = createProgram(gl,vertex_shader, fragment_shader_phong);
         }
         renderModel();
     })
+})
+
+/* Change Light Color */
+lightColor.addEventListener('input', () => {
+    
+    var hexColor = lightColor.value;
+
+    var r = parseInt(hexColor.slice(1, 3), 16);
+    var g = parseInt(hexColor.slice(3, 5), 16);
+    var b = parseInt(hexColor.slice(5, 7), 16);
+
+    var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+    gl.uniform4fv(lightDiffuse, [r,g,b, 1.0]);
+    renderModel();
+})
+
+/* Change Light Ambient */
+lightAmbient.addEventListener('input', () => {
+    var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+    gl.uniform4fv(lightAmbient, [lightAmbient.value, lightAmbient.value, lightAmbient.value, 1.0]); 
+    renderModel();
+})
+
+/* Change Light Specular */
+lightSpecular.addEventListener('input', () => {
+    var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+    gl.uniform4fv(lightSpecular, [lightSpecular.value, lightSpecular.value, lightSpecular.value, 1.0]);
+    renderModel();
+})
+
+/* Change Material Color */
+materialColor.addEventListener('input', () => {
+    var hexColor = materialColor.value;
+
+    var r = parseInt(hexColor.slice(1, 3), 16);
+    var g = parseInt(hexColor.slice(3, 5), 16);
+    var b = parseInt(hexColor.slice(5, 7), 16);
+
+    var materialDiffuse = gl.getUniformLocation(program, "uMaterialDiffuse");
+    gl.uniform4fv(materialDiffuse, [r,g,b, 1.0]);
+    renderModel();
+})
+
+/* Change Material Ambient */
+materialAmbient.addEventListener('input', () => {
+    var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+    gl.uniform4fv(materialAmbient, [materialAmbient.value, materialAmbient.value, materialAmbient.value, 1.0]); 
+    renderModel();
+})
+
+/* Change Material Diffuse */
+materialSpecular.addEventListener('input', () => {
+    var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+    gl.uniform4fv(materialSpecular, [materialSpecular.value, materialSpecular.value, materialSpecular.value, 1.0]);
+    renderModel();
 })
 
 /* Change Projection */
