@@ -50,7 +50,7 @@
     line-height: 0%;
     width: 100%;
     height: fit-content;
-    margin-top: 5vh;
+    margin-top: 0.5vh;
     position: relative;
 }
 .select-button {
@@ -119,8 +119,8 @@
     background-color: #363F44;
     padding-left: 2.5vh;
     padding-right: 2.5vh;
-    padding-top: 0.5vh;
-    padding-bottom: 0.5vh;
+    padding-top: 0.2vh;
+    padding-bottom: 0.2vh;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
     overflow-y: auto;
