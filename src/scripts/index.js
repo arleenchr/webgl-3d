@@ -1,10 +1,3 @@
-var newModel = {
-    colors: [],
-    vertices: [],
-    faces: [],
-    normals: [],
-}
-
 var state;
 
 // Set initial state for webgl canvas
@@ -12,15 +5,8 @@ const setInitialState = () => {
     state = {
         objects: endObject,
         selectedObject: null,
-        model: newModel,
         savedColor: null,
         chosenColor: [1, 0, 0],
-        transform: {
-            // x, y, z
-            translate: [0, 0, 0],
-            rotate: [0, 0, 0],
-            scale: [1, 1, 1],
-        },
         viewMatrix: {
             // x, y, z
             camera: [0, 0, 1], 
@@ -189,96 +175,97 @@ const renderModel = () => {
     
 }
 
-const renderModel2 = () => {
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+// const renderModel2 = () => {
+//     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // Clear canvas first
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//     // Clear canvas first
+//     gl.clearColor(1.0, 1.0, 1.0, 1.0);
+//     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Enable face culling
-    gl.enable(gl.CULL_FACE);
+//     // Enable face culling
+//     gl.enable(gl.CULL_FACE);
 
-    // Enable depth testing
-    gl.enable(gl.DEPTH_TEST); 
+//     // Enable depth testing
+//     gl.enable(gl.DEPTH_TEST); 
 
-    gl.useProgram(program);
+//     gl.useProgram(program);
 
-    const view = setViewMat(state.viewMatrix);
+//     const view = setViewMat(state.viewMatrix);
 
-    // Set up the geometry of the object
-    const geometry = setObjGeometry(gl, state.model, view); 
+//     // Set up the geometry of the object
+//     const geometry = setObjGeometry(gl, state.model, view); 
 
-    // Set up the transformation matrix
-    const transform = setTransformMat(state.model, state.transform);
+//     // Set up the transformation matrix
+//     const transform = setTransformMat(state.model, state.transform);
 
-    // Set up the projection matrix
-    const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
+//     // Set up the projection matrix
+//     const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
 
-    console.log("View: ", view);
-    console.log("Projection: ", projection);
-    // Set the transformation matrix uniform
-    const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
-    gl.uniformMatrix4fv(uTransform, false, transform);
+//     console.log("View: ", view);
+//     console.log("Projection: ", projection);
+//     // Set the transformation matrix uniform
+//     const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
+//     gl.uniformMatrix4fv(uTransform, false, transform);
 
-    // Set the projection matrix uniform
-    const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
-    gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
+//     // Set the projection matrix uniform
+//     const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
+//     gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
 
 
-    // Calculate normal matrix
-    var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
-    let modelMatrix = matrices.multiply(view, transform);
-    let nMatrix = matrices.inverse(modelMatrix);
-    nMatrix = matrices.transpose(nMatrix);
+//     // Calculate normal matrix
+//     var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
+//     let modelMatrix = matrices.multiply(view, transform);
+//     let nMatrix = matrices.inverse(modelMatrix);
+//     nMatrix = matrices.transpose(nMatrix);
 
-    gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
+//     gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
 
-    // Set material of model
-    if(state.material == "Basic"){
-        setColor(gl, state.model);
-        const vertColor = gl.getAttribLocation(program, "aColor");
-        gl.enableVertexAttribArray(vertColor);
-        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+//     // Set material of model
+//     if(state.material == "Basic"){
+//         setColor(gl, state.model);
+//         const vertColor = gl.getAttribLocation(program, "aColor");
+//         gl.enableVertexAttribArray(vertColor);
+//         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
-        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-        gl.uniform4fv(lightAmbient, state.lightAmbient);
+//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+//         gl.uniform4fv(lightAmbient, state.lightAmbient);
 
-        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
-        gl.uniform4fv(materialAmbient, state.materialAmbient);
-    }
-    else if(state.material == "Phong"){
-        console.log("ini phonggggg")
+//         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+//         gl.uniform4fv(materialAmbient, state.materialAmbient);
+//     }
+//     else if(state.material == "Phong"){
+//         console.log("ini phonggggg")
 
-        setColor(gl, state.model);
-        const vertColor = gl.getAttribLocation(program, "aColor");
-        gl.enableVertexAttribArray(vertColor);
-        gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
+//         setColor(gl, state.model);
+//         const vertColor = gl.getAttribLocation(program, "aColor");
+//         gl.enableVertexAttribArray(vertColor);
+//         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
-        var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-        gl.uniform3fv(lightDirection, [-1,1,-1]);
+//         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
+//         gl.uniform3fv(lightDirection, [-1,1,-1]);
         
-        var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
-        gl.uniform4fv(lightDiffuse, [1,1,1,1]);
+//         var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
+//         gl.uniform4fv(lightDiffuse, [1,1,1,1]);
         
-        var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-        gl.uniform4fv(lightAmbient, state.lightAmbient);
+//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
+//         gl.uniform4fv(lightAmbient, state.lightAmbient);
 
-        var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
-        gl.uniform4fv(lightSpecular, [1,1,1,1]);
+//         var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
+//         gl.uniform4fv(lightSpecular, [1,1,1,1]);
         
-        var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
-        gl.uniform4fv(materialAmbient, state.materialAmbient);
+//         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
+//         gl.uniform4fv(materialAmbient, state.materialAmbient);
 
-        var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
-        gl.uniform4fv(materialSpecular, state.materialSpecular);
+//         var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
+//         gl.uniform4fv(materialSpecular, state.materialSpecular);
 
-        var shininess = gl.getUniformLocation(program, "shininess");
-        gl.uniform1f(shininess, state.shine);
-    }
+//         var shininess = gl.getUniformLocation(program, "shininess");
+//         gl.uniform1f(shininess, state.shine);
+//     }
 
-    gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
-}
+//     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
+// }
+
 document.addEventListener("DOMContentLoaded", () => {
     const selectModelContainer = document.querySelector(".select-model-container");
     const selectButton = document.querySelector(".select-button");
@@ -308,6 +295,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             else if (selectedOption === "Wolf") {
                 state.objects = wolfObject;
+            }
+            else if (selectedOption === "Tube") {
+                state.objects = tubeObject;
             }
 
             state.selectedObject = state.objects[0];
@@ -659,14 +649,14 @@ window.addEventListener('keydown', function(event) {
         case "ArrowLeft":
             if (transX.value > -100) {
                 transX.value = Math.max(parseInt(transX.value) - shiftVal, -100);
-                state.transform.translate[0] = transX.value / 100;
+                state.objects[0].translate[0] = transX.value / 100;
                 renderModel();
             }
             break;
         case "ArrowRight":
             if (transX.value < 100) {
                 transX.value = Math.min(parseInt(transX.value) + shiftVal, 100);
-                state.transform.translate[0] = transX.value / 100;
+                state.objects[0].translate[0] = transX.value / 100;
                 renderModel();
             }
             break;
@@ -674,7 +664,7 @@ window.addEventListener('keydown', function(event) {
             if (!gravityFeature) {
                 if (transY.value < 100) {
                     transY.value = Math.min(parseInt(transY.value) + shiftVal, 100);
-                    state.transform.translate[1] = transY.value / 100;
+                    state.objects[0].translate[1] = transY.value / 100;
                     renderModel();
                 }
             } else {
@@ -698,7 +688,7 @@ window.addEventListener('keydown', function(event) {
                         velocity = Math.sqrt(2 * gravity * jumpHeight); 
                     }
 
-                    state.transform.translate[1] = transY.value / 100;
+                    state.objects[0].translate[1] = transY.value / 100;
                     renderModel();
                 }, 1000/60); // Render 60 times per second
             }
@@ -707,7 +697,7 @@ window.addEventListener('keydown', function(event) {
             if (!gravityFeature) {
                 if (transY.value > -100) {
                     transY.value = Math.max(parseInt(transY.value) - shiftVal, -100);
-                    state.transform.translate[1] = transY.value / 100;
+                    state.objects[0].translate[1] = transY.value / 100;
                     renderModel();
                 }
             } else {
@@ -798,7 +788,7 @@ resetCamera.addEventListener('click', () => {
     else {
         state.radius = 1;
     }
-    
+
     cameraRadius.value = 0;
     state.projection = "orthographic";
     cameraProjection.value = "orthographic";
@@ -983,19 +973,77 @@ function interpolateKeyframes(frames, currentTime) {
 function applyTransformations(animationData) {
     if (!animationData) return;
 
-    state.selectedObject.translate = [
+    state.objects[0].translate = [
         animationData.translation[0] / 100,
         animationData.translation[1] / 100,
         animationData.translation[2] / 100
     ];
-    state.selectedObject.rotate = [
+    state.objects[0].rotate = [
         animationData.rotation[0] * Math.PI / 100,
         animationData.rotation[1] * Math.PI / 100,
         animationData.rotation[2] * Math.PI / 100
     ]
-    state.selectedObject.scale = animationData.scale;
+    state.objects[0].scale = animationData.scale;
     renderModel();
 }
+
+function interpolateArticulatedFrames(frames, currentTime) {
+    let prevFrameIndex = Math.floor(currentTime);
+    let nextFrameIndex = Math.ceil(currentTime);
+    let prevFrame = frames[prevFrameIndex];
+    let nextFrame = frames[nextFrameIndex];
+
+    if (!prevFrame || !nextFrame) {
+        return null;
+    }
+
+    let interpolatedFrame = {
+        translate: [
+            lerp(prevFrame.translate[0], nextFrame.translate[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.translate[1], nextFrame.translate[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.translate[2], nextFrame.translate[2], currentTime - prevFrameIndex)
+        ],
+        rotate: [
+            lerp(prevFrame.rotate[0], nextFrame.rotate[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.rotate[1], nextFrame.rotate[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.rotate[2], nextFrame.rotate[2], currentTime - prevFrameIndex)
+        ],
+        scale: [
+            lerp(prevFrame.scale[0], nextFrame.scale[0], currentTime - prevFrameIndex),
+            lerp(prevFrame.scale[1], nextFrame.scale[1], currentTime - prevFrameIndex),
+            lerp(prevFrame.scale[2], nextFrame.scale[2], currentTime - prevFrameIndex)
+        ]
+    };
+
+    return interpolatedFrame;
+}
+
+function applyAnimationToArticulatedModel(object) {
+    if (object.frames.length != 0) {
+        const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
+
+        object.translate = [
+            interpolatedFrame.translate[0],
+            interpolatedFrame.translate[1],
+            interpolatedFrame.translate[2] 
+        ];
+        object.rotate = [
+            interpolatedFrame.rotate[0],
+            interpolatedFrame.rotate[1],
+            interpolatedFrame.rotate[2] 
+        ]
+        object.scale = interpolatedFrame.scale;
+    }
+
+    if (object.children.length > 0) {
+        object.children.forEach(child => {
+            applyAnimationToArticulatedModel(child);
+        });
+    }
+}
+
+let hollowModel = ["pyramid", "octahedron"];
+let articulatedModel = ["cube", "wolf", "tube"];
 
 function animate() {
     if (animationPaused) return;
@@ -1006,8 +1054,16 @@ function animate() {
 
     updateAnimationTime(deltaTime * desiredFPS);
 
-    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
-    applyTransformations(interpolatedFrame);
+    if (hollowModel.includes(state.objects[0].name)) {
+        const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+        applyTransformations(interpolatedFrame);
+    }
+    else {
+        totalFrames = state.objects[0].frames.length;
+        totalAnimationTime = 10;
+        applyAnimationToArticulatedModel(state.objects[0]);
+    }
+    
 
     renderModel();
     requestAnimationFrame(animate);
