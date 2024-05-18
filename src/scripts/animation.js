@@ -19,8 +19,8 @@
 
 /** @type {AnimationClip} */
 
-const hollowOctahedronAnim = {
-    name: "Hollow Octahedron",
+const hollowAnim = {
+    name: "Hollow Object",
     frames: [
         // Frame 0
         {
