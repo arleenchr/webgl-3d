@@ -72,6 +72,6 @@ const tube = new Object();
 tube.name = 'tube';
 tube.model = tubeContent;
 
-var endObject = [
+var tubeObject = [
     tube,
 ];
