@@ -277,6 +277,20 @@ function generateSceneGraph (models, level = 0){
 
 generateSceneGraph(state.objects);
 
+//Export objects to JSON
+function exportToJsonFile(data) {
+    const jsonString = JSON.stringify(data, null, 4);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+} 
+
 // Color
 const setColor = (gl, model) => {
     const colorBuffer = gl.createBuffer();
