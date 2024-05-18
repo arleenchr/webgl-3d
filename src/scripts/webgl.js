@@ -16,6 +16,8 @@ uniform mat4 uNormalMatrix;
 
 varying vec3 vEyeVec; 
 
+varying vec4 v_color;
+
 void main(void) {
     vec4 transformedPos = uTransformationMatrix * vec4(aPosition, 1.0);
     vec4 transformedNormal = uTransformationMatrix * vec4(aNormal, 1.0);
@@ -31,17 +33,10 @@ void main(void) {
     vNormal = uNormalMatrix * vec4(aNormal, 0.0);
     fragColor = vec4(aColor, 1.0);    
     colorFactor = min(max((1.0 - transformedPos.z) / 2.0, 0.0), 1.0);
+    v_color = fragColor;
 }
 `;
 
-const fragment_shader_3d = `
-precision mediump float;
-uniform vec4 uLightAmbient; 
-uniform vec4 uMaterialAmbient;
-void main(void) {
-    gl_FragColor = uLightAmbient * uMaterialAmbient;
-}
-`;
 const fragment_shader_phong = `
 precision mediump float;
 
@@ -51,8 +46,8 @@ uniform vec4 uLightAmbient;
 uniform vec4 uLightDiffuse; 
 uniform vec4 uLightSpecular;
 uniform vec4 uMaterialAmbient;
-uniform vec4 uMaterialDiffuse; 
 uniform vec4 uMaterialSpecular;
+varying vec4 v_color;
 varying vec4 vNormal;
 varying vec3 vEyeVec;
 
@@ -64,7 +59,7 @@ void main(void) {
     vec4 Id = vec4(0.0, 0.0, 0.0, 1.0);
     vec4 Is = vec4(0.0, 0.0, 0.0, 1.0);
     if(lambertTerm > 0.0) {
-        Id = uLightDiffuse * uMaterialDiffuse * lambertTerm;
+        Id = uLightDiffuse * v_color * lambertTerm;
         vec3 E = normalize(vEyeVec);
         vec3 R = reflect(L, N);
         float specular = pow( max(dot(R, E), 0.0), shininess);
@@ -74,12 +69,15 @@ void main(void) {
 }
 
 `
-const fragment_shader = `
+const fragment_shader_basic = `
 precision mediump float;
+
 uniform vec4 uLightAmbient; 
-uniform vec4 uMaterialAmbient;
-void main(void) {
-    gl_FragColor = uLightAmbient * uMaterialAmbient;
+
+varying vec4 v_color;
+
+void main() {
+   gl_FragColor = uLightAmbient * v_color;
 }
 `;
 
