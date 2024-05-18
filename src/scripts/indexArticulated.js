@@ -2,8 +2,7 @@ var state;
 
 const setInitialState = () => {
     state = {
-        objects: wolfObject,
-        // objects: endObject,
+        objects: endObject,
         viewMatrix: {
             // x, y, z
             camera: [0, 0, 1], 

@@ -287,6 +287,6 @@ const pyramid = new Object();
 pyramid.name = 'pyramid';
 pyramid.model = pyramidContent;
 
-var endObject = [
+var pyramidObject = [
     pyramid,
 ];

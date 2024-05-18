@@ -4,6 +4,16 @@ var vectors = {
         return res;
     },
 
+    addVecs: (x, y) => {
+        res = [x[0] + y[0], x[1] + y[1], x[2] + y[2]];
+        return res;
+    },
+
+    scaleVecs: (x, scale) => {
+        res = [x[0] * scale, x[1] * scale, x[2] * scale];
+        return res;
+    },
+
     crossVecs: (x, y) => {
         res = [
             x[1] * y[2] - x[2] * y[1],

@@ -410,6 +410,6 @@ const octahedron = new Object();
 octahedron.name = 'octahedron';
 octahedron.model = octahedronContent;
 
-var endObject = [
+var octahedronObject = [
     octahedron,
 ];

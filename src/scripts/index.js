@@ -295,6 +295,23 @@ document.addEventListener("DOMContentLoaded", () => {
             selectButtonText.innerText = selectedOption;
             selectModelContainer.classList.remove("active");
 
+            
+            if (selectedOption === "Cube") {
+                state.objects = endObject;
+            }
+            else if (selectedOption === "Pyramid") {
+                state.objects = pyramidObject;
+            }
+            else if (selectedOption === "Octahedron") {
+                state.objects = octahedronObject;
+            }
+            else if (selectedOption === "Wolf") {
+                state.objects = wolfObject;
+            }
+
+            state.selectedObject = state.objects[0];
+            renderModel();
+
             modelOptions.forEach(opt => opt.classList.remove("selected"));
             option.classList.add("selected");
         });
