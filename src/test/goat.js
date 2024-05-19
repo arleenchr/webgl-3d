@@ -1,6 +1,6 @@
 const goat = new Object();
 goat.name = 'head';
-goat.model = generateCuboid(1, 0.5, 1, [-0.5, 0.85, 0]);
+goat.model = generateCuboid(1, 0.5, 0.6, [-0.5, 0.85, 0]);
 
 const goatHead = new Object();
 goatHead.name = 'head';
@@ -13,37 +13,37 @@ goatJaw.setParent(goatHead);
 
 const goatLeftHorn = new Object();
 goatLeftHorn.name = 'leftHorn';
-goatLeftHorn.model = generateCuboid(0.2, 0.075, 0.1, [-0.45, 1.5, -0.15]);
+goatLeftHorn.model = generateCuboid(0.2, 0.075, 0.1, [-0.45, 1.45, -0.15]);
 goatLeftHorn.setParent(goatHead);
 
 const goatLeftHornMid = new Object();
 goatLeftHornMid.name = 'leftHornMid';
-goatLeftHornMid.model = generateCuboid(0.2, 0.075, 0.1, [-0.42, 1.8, -0.15]);
+goatLeftHornMid.model = generateCuboid(0.2, 0.075, 0.1, [-0.42, 1.65, -0.15]);
 goatLeftHornMid.setParent(goatLeftHorn);
 
 const goatLeftHornEnd = new Object();
 goatLeftHornEnd.name = 'leftHornEnd';
-goatLeftHornEnd.model = generateCuboid(0.2, 0.075, 0.1, [-0.35, 1.8, -0.15]);
+goatLeftHornEnd.model = generateCuboid(0.2, 0.075, 0.1, [-0.35, 1.65, -0.15]);
 goatLeftHornEnd.setParent(goatLeftHorn);
 
 const goatRightHorn = new Object();
 goatRightHorn.name = 'rightHorn';
-goatRightHorn.model = generateCuboid(0.2, 0.075, 0.1, [-0.45, 1.5, 0.15]);
+goatRightHorn.model = generateCuboid(0.2, 0.075, 0.1, [-0.45, 1.45, 0.15]);
 goatRightHorn.setParent(goatHead);
 
 const goatRightHornMid = new Object();
 goatRightHornMid.name = 'rightHornMid';
-goatRightHornMid.model = generateCuboid(0.2, 0.075, 0.1, [-0.42, 1.8, 0.15]);
+goatRightHornMid.model = generateCuboid(0.2, 0.075, 0.1, [-0.42, 1.65, 0.15]);
 goatRightHornMid.setParent(goatRightHorn);
 
 const goatRightHornEnd = new Object();
 goatRightHornEnd.name = 'rightHornEnd';
-goatRightHornEnd.model = generateCuboid(0.2, 0.075, 0.1, [-0.35, 1.8, 0.15]);
+goatRightHornEnd.model = generateCuboid(0.2, 0.075, 0.1, [-0.35, 1.65, 0.15]);
 goatRightHornEnd.setParent(goatRightHorn);
 
 const goatNeck = new Object();
 goatNeck.name = 'goatNeck';
-goatNeck.model = generateCuboid(1, 0.3, 0.5, [-0.5, 0.35, 0]);
+goatNeck.model = generateCuboid(1, 0.3, 0.4, [-0.5, 0.35, 0]);
 goatNeck.setParent(goatHead);
 
 const goatBody = new Object();
