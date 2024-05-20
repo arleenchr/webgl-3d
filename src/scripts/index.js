@@ -1053,8 +1053,8 @@ function applyAnimationToArticulatedModel(object) {
     }
 }
 
-let hollowModel = ["pyramid", "octahedron"];
-let articulatedModel = ["cube", "wolf", "tube"];
+let hollowModel = ["pyramid", "octahedron", "tube"];
+let articulatedModel = ["cube", "wolf", "duck", "goat"];
 
 function animate() {
     if (animationPaused) return;
