@@ -460,8 +460,7 @@ const setObjGeometry = (gl, model) => {
     const normalBuff = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuff);
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-  
-    // console.log("LenFaces HOHO:", faces.length);
+
     return { vertexBuff: vertexBuff, normalBuff: normalBuff, faceBuff: faceBuff, lenFaces: faces.length };
 }
 
@@ -850,7 +849,7 @@ let currentTime = 0;
 let animationSpeed = 1;
 let animationPaused = true;
 let desiredFPS = 3; // default
-let totalFrames = hollowAnim.frames.length;
+let totalFrames = hollowAnim.frames.length; // Default
 let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
@@ -1036,13 +1035,15 @@ function applyAnimationToArticulatedModel(object) {
         object.translate = [
             interpolatedFrame.translate[0],
             interpolatedFrame.translate[1],
-            interpolatedFrame.translate[2] 
+            interpolatedFrame.translate[2]
         ];
+
         object.rotate = [
             interpolatedFrame.rotate[0],
             interpolatedFrame.rotate[1],
             interpolatedFrame.rotate[2] 
         ]
+        
         object.scale = interpolatedFrame.scale;
     }
 
@@ -1071,7 +1072,7 @@ function animate() {
     }
     else {
         totalFrames = state.objects[0].frames.length;
-        totalAnimationTime = 10;
+        totalAnimationTime = state.objects[0].frames.length;
         applyAnimationToArticulatedModel(state.objects[0]);
     }
     
