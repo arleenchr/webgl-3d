@@ -44,6 +44,11 @@ duck.animation = [
         rotate: [0, -Math.PI/2, 0],
         scale: [1, 1, 1],
     },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, -Math.PI, 0],
+        scale: [1, 1, 1],
+    },
 ];
 addFramesToObject(duck);
 
@@ -78,9 +83,9 @@ duckNeck.animation = [
         scale: [1, 1, 1],
     },
     still,
+    still,
 ];
 addFramesToObject(duckNeck);
-
 
 const duckHead = new Object();
 duckHead.name = 'head';
@@ -97,8 +102,47 @@ duckHead.animation = [
     still,
     still,
     still,
+    still,
 ];
 addFramesToObject(duckHead);
+
+const duckEye1 = new Object();
+duckEye1.name = 'eye-1';
+duckEye1.model = generateCuboid(0.1, 0.05, 0.01, [0.065, 0.67, -0.4]);
+duckEye1.setParent(duckHead);
+
+duckEye1.animation = [
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+];
+addFramesToObject(duckEye1);
+
+const duckEye2 = new Object();
+duckEye2.name = 'eye-2';
+duckEye2.model = generateCuboid(0.1, 0.05, 0.01, [-0.065, 0.67, -0.4]);
+duckEye2.setParent(duckHead);
+
+duckEye2.animation = [
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+    still,
+];
+addFramesToObject(duckEye2);
 
 const duckBeak = new Object();
 duckBeak.name = 'beak';
@@ -106,6 +150,7 @@ duckBeak.model = generateCuboid(0.1, 0.2, 0.2, [0, 0.525, -0.4]);
 duckBeak.setParent(duckHead);
 
 duckBeak.animation = [
+    still,
     still,
     still,
     still,
@@ -124,6 +169,7 @@ duckLowerBody.model = generateCuboid(0.3, 0.35, 0.5, [0, -0.3, 0]);
 duckLowerBody.setParent(duck);
 
 duckLowerBody.animation = [
+    still,
     still,
     still,
     still,
@@ -171,6 +217,7 @@ duckTail.animation = [
         scale: [1, 1, 1],
     },
     still,
+    still,
 ];
 addFramesToObject(duckTail);
 
@@ -204,6 +251,7 @@ duckLeg1.animation = [
         rotate: [Math.PI/6, 0, 0],
         scale: [1, 1, 1],
     },
+    still,
     still,
 ];
 addFramesToObject(duckLeg1);
@@ -239,6 +287,7 @@ duckLeg2.animation = [
         scale: [1, 1, 1],
     },
     still,
+    still,
 ];
 addFramesToObject(duckLeg2);
 
@@ -257,6 +306,7 @@ duckFeet1.animation = [
     still,
     still,
     still,
+    still,
 ];
 addFramesToObject(duckFeet1);
 
@@ -266,6 +316,7 @@ duckFeet2.model = generateCuboid(0.1, 0.15, 0.2, [-0.1, -0.75, -0.02]);
 duckFeet2.setParent(duckLeg2);
 
 duckFeet2.animation = [
+    still,
     still,
     still,
     still,
