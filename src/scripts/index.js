@@ -1036,19 +1036,19 @@ function applyAnimationToArticulatedModel(object) {
         animationSlider.max = totalFrames - 1;
 
         object.translate = [
-            interpolatedFrame.translate[0],
-            interpolatedFrame.translate[1],
-            interpolatedFrame.translate[2]
+            interpolatedFrame?.translate[0],
+            interpolatedFrame?.translate[1],
+            interpolatedFrame?.translate[2]
         ];
 
         // Notes: Input MUST BE in radian
         object.rotate = [
-            interpolatedFrame.rotate[0],
-            interpolatedFrame.rotate[1],
-            interpolatedFrame.rotate[2]
+            interpolatedFrame?.rotate[0],
+            interpolatedFrame?.rotate[1],
+            interpolatedFrame?.rotate[2]
         ]
 
-        object.scale = interpolatedFrame.scale;
+        object.scale = interpolatedFrame?.scale;
     }
 
     if (object.children.length > 0) {
