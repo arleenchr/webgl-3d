@@ -167,8 +167,9 @@ const renderModel = () => {
     // Enable depth testing
     gl.enable(gl.DEPTH_TEST);
 
-    state.objects[0].computeWorldMatrix();
-
+    if (state.objects[0].translate && state.objects[0].rotate && state.objects[0].scale) {
+        state.objects[0].computeWorldMatrix();
+    }
     console.log("OBJ: ", state.objects);
     renderObject(state.objects);
     console.log(state);
@@ -592,7 +593,7 @@ const setColor = (gl, model) => {
 transX.addEventListener('input', () => {
     state.selectedObject.translate[0] = transX.value / 100;
     const translationX = document.getElementById('translation-x');
-    translationX.innerText = transX.value / 100;
+    translationX.innerText = transX.value;
     renderModel();
 })
 
@@ -600,7 +601,7 @@ transX.addEventListener('input', () => {
 transY.addEventListener('input', () => {
     state.selectedObject.translate[1] = transY.value / 100;
     const translationY = document.getElementById('translation-y');
-    translationY.innerText = transY.value / 100;
+    translationY.innerText = transY.value;
     renderModel();
 })
 
@@ -608,7 +609,7 @@ transY.addEventListener('input', () => {
 transZ.addEventListener('input', () => {
     state.selectedObject.translate[2] = -transZ.value / 100;
     const translationZ = document.getElementById('translation-z');
-    translationZ.innerText = -transZ.value / 100;
+    translationZ.innerText = -transZ.value;
     renderModel();
 })
 
@@ -854,8 +855,6 @@ let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
 
-animationSlider.max = totalFrames - 1;
-
 playPauseButton.addEventListener('click', toggleAnimation);
 fpsInput.addEventListener('input', function() {
     desiredFPS = parseInt(this.value);
@@ -1032,18 +1031,23 @@ function applyAnimationToArticulatedModel(object) {
     if (object.frames.length != 0) {
         const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
 
+        // Update animation slider
+        totalFrames = object.frames.length;
+        animationSlider.max = totalFrames - 1;
+
         object.translate = [
             interpolatedFrame.translate[0],
             interpolatedFrame.translate[1],
             interpolatedFrame.translate[2]
         ];
 
+        // Notes: Input MUST BE in radian
         object.rotate = [
             interpolatedFrame.rotate[0],
             interpolatedFrame.rotate[1],
-            interpolatedFrame.rotate[2] 
+            interpolatedFrame.rotate[2]
         ]
-        
+
         object.scale = interpolatedFrame.scale;
     }
 
@@ -1068,14 +1072,17 @@ function animate() {
 
     if (hollowModel.includes(state.objects[0].name)) {
         const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+
+        // Update animation slider
+        animationSlider.max = totalFrames - 1;
         applyTransformations(interpolatedFrame);
     }
     else {
         totalFrames = state.objects[0].frames.length;
         totalAnimationTime = state.objects[0].frames.length;
+
         applyAnimationToArticulatedModel(state.objects[0]);
     }
-    
 
     renderModel();
     requestAnimationFrame(animate);
