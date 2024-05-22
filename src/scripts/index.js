@@ -929,7 +929,7 @@ function updateAnimationTime(deltaTime) {
         }
     }
 
-    animationSlider.value = Math.floor(currentTime * desiredFPS);
+    animationSlider.value = Math.floor((currentTime / totalAnimationTime) * totalFrames);
 }
 
 function lerp(a, b, t) {
