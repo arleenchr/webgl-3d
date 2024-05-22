@@ -59,6 +59,12 @@ const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
 const materialShininess = document.getElementById("material-shininess");
 
+// TODO: Implement Logic
+const diffuseIntensity = document.getElementById("diffuse-intensity");
+const normalIntensity = document.getElementById("normal-intensity");
+const specularIntensity = document.getElementById("specular-intensity");
+const displacementIntensity = document.getElementById("displacement-intensity");
+
 let mouseDown = false;
 let lastMouseX = null;
 let lastMouseY = null;
@@ -778,6 +784,10 @@ materialRadio.forEach((radio) => {
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
             materialShininess.disabled=true;
+            diffuseIntensity.disabled=true;
+            normalIntensity.disabled=true;
+            specularIntensity.disabled=true;
+            displacementIntensity.disabled=true;
 
             program = createProgram(gl,vertex_shader, fragment_shader_basic);
         }
@@ -787,6 +797,10 @@ materialRadio.forEach((radio) => {
             materialAmbient.disabled=false;
             materialSpecular.disabled=false;
             materialShininess.disabled=false;
+            diffuseIntensity.disabled=false;
+            normalIntensity.disabled=false;
+            specularIntensity.disabled=false;
+            displacementIntensity.disabled=false;
 
             program = createProgram(gl,vertex_shader, fragment_shader_phong);
         }
