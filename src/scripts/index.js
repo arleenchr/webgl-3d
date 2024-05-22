@@ -1028,6 +1028,7 @@ function interpolateArticulatedFrames(frames, currentTime) {
 }
 
 function applyAnimationToArticulatedModel(object) {
+    console.log(object.frames.length);
     if (object.frames.length != 0) {
         const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
 
