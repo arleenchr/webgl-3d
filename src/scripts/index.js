@@ -3,7 +3,7 @@ var state;
 // Set initial state for webgl canvas
 const setInitialState = () => {
     state = {
-        objects: endObject,
+        objects: endObject, // Notes: Can be modified to make testing model faster
         selectedObject: null,
         savedColor: null,
         chosenColor: [1, 0, 0],
@@ -592,24 +592,24 @@ const setColor = (gl, model) => {
 /* Translate X */
 transX.addEventListener('input', () => {
     state.selectedObject.translate[0] = transX.value / 100;
-    const translationX = document.getElementById('translation-x');
-    translationX.innerText = transX.value;
+    // const translationX = document.getElementById('translation-x');
+    // translationX.innerText = transX.value;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
     state.selectedObject.translate[1] = transY.value / 100;
-    const translationY = document.getElementById('translation-y');
-    translationY.innerText = transY.value;
+    // const translationY = document.getElementById('translation-y');
+    // translationY.innerText = transY.value;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
     state.selectedObject.translate[2] = -transZ.value / 100;
-    const translationZ = document.getElementById('translation-z');
-    translationZ.innerText = -transZ.value;
+    // const translationZ = document.getElementById('translation-z');
+    // translationZ.innerText = -transZ.value;
     renderModel();
 })
 
