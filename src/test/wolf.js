@@ -3,10 +3,11 @@ const snoutColor = [208 / 255, 178 / 255, 164 / 255];
 const jawColor = [62 / 255, 61 / 255, 65 / 255];
 const darkerFurColor = [194 / 255, 191 / 255, 190 / 255];
 const earColor = [128 / 255, 126 / 255, 125 / 255];
-const eyeColor = [0, 0, 0];
+const eyesColor = [0, 0, 0];
 
 const wolf = new Object();
 wolf.name = 'wolf';
+wolf.model = generateCuboid(0, 0, 0, [0, 0, 0]);
 
 const head = new Object();
 head.name = 'head';
@@ -17,13 +18,13 @@ head.setParent(wolf);
 const leftEye = new Object();
 leftEye.name = 'leftEye';
 leftEye.model = generateCuboid(0.18, 0.01, 0.09, [-0.63, 0.15, -0.12]);
-setSolidColor(leftEye.model, eyeColor);
+setSolidColor(leftEye.model, eyesColor);
 leftEye.setParent(head);
 
 const rightEye = new Object();
 rightEye.name = 'leftEye';
 rightEye.model = generateCuboid(0.18, 0.01, 0.09, [-0.63, 0.15, 0.12]);
-setSolidColor(rightEye.model, eyeColor);
+setSolidColor(rightEye.model, eyesColor);
 rightEye.setParent(head);
 
 const snout = new Object();
