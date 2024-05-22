@@ -31,7 +31,7 @@ setInitialState();
 
 var canvas = document.querySelector("#gl-canvas")
 const modelInput = document.getElementById("modelFile");
-const colorCheckbox = document.getElementById("color-button");
+const colorToggle = document.getElementById("color-toggle");
 
 const transX = document.getElementById('translation-x-slider');
 const transY = document.getElementById('translation-y-slider');
@@ -396,9 +396,8 @@ function restoreColors(object, path) {
     }
 }
 
-colorCheckbox.addEventListener("change", () => {
-    console.log("Color:", state.objects[0].model.colors);
-    if (colorCheckbox.checked) {
+colorToggle.addEventListener("change", () => {
+    if (colorToggle.checked) {
         if (state.savedColor != null) {
             restoreColors(state.objects[0], 'parent');
         } else {
