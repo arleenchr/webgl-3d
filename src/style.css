@@ -39,6 +39,11 @@
     margin-bottom: 1.5rem;
     align-self: left;
 }
+.material-attr-title {
+    line-height: 0%;
+    margin-bottom: 1.5rem;
+    margin-top: 2.5rem;
+}
 .load-button{
     width: 40%;
     border: none;
@@ -348,6 +353,20 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+.material-input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.material-slider-container {
+    display: flex;
+    align-items: center;
+    width: 60%;
+}
+.material-attr-label {
+    line-height: 5%;
+    line-break: normal;
 }
 .transformation-label{
     line-height: 0%;
