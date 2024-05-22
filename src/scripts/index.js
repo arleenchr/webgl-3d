@@ -5,7 +5,7 @@ const setInitialState = () => {
     state = {
         objects: endObject, // Notes: Can be modified to make testing model faster
         selectedObject: null,
-        savedColor: null,
+        savedColor: {},
         chosenColor: [1, 0, 0],
         viewMatrix: {
             // x, y, z
@@ -366,29 +366,47 @@ document.addEventListener("DOMContentLoaded", () => {
 //     reader.readAsText(file);    
 // });
 
+// Save colors and turn off the color (turn into greyish)
+const saveAndTurnOffColor = (object, path) => {
+    // Save the object's colors
+    state.savedColor[path] = object.model.colors.map(color => color.slice());
+
+    // Turn the object's colors to greyish color
+    for (let i = 0; i < object.model.colors.length; i++) {
+        let avgColor = (object.model.colors[i][0] + object.model.colors[i][1] + object.model.colors[i][2]) / 3;
+        object.model.colors[i] = [avgColor, avgColor, avgColor];
+    }
+
+    // Recursively process children
+    for (let j = 0; j < object.children.length; j++) {
+        saveAndTurnOffColor(object.children[j], `${path}.child${j}`);
+    }
+}
+
+// Restore object's original color
+function restoreColors(object, path) {
+    // Restore the object's colors
+    for (let i = 0; i < object.model.colors.length; i++) {
+        object.model.colors[i] = state.savedColor[path][i].slice();
+    }
+
+    // Recursively process the object's children
+    for (let j = 0; j < object.children.length; j++) {
+        restoreColors(object.children[j], `${path}.child${j}`);
+    }
+}
+
 colorCheckbox.addEventListener("change", () => {
     console.log("Color:", state.objects[0].model.colors);
     if (colorCheckbox.checked) {
-        console.log("Checked");
         if (state.savedColor != null) {
-            console.log("There are saved colors")
-            for (let i = 0; i < state.savedColor.length; i++) {
-                state.objects[0].model.colors[i] = state.savedColor[i];
-            }
+            restoreColors(state.objects[0], 'parent');
         } else {
             console.log("There are no saved colors");
         }
         renderModel();
     } else {
-        console.log("Unchecked");
-        state.savedColor = state.objects[0].model.colors.map(color => color.slice());
-        // Change color to gray
-        for (let i = 0; i < state.objects[0].model.colors.length; i++) {
-            // Calculate the average of the RGB values to get a gray color
-            let avgColor = (state.objects[0].model.colors[i][0] + state.objects[0].model.colors[i][1] + state.objects[0].model.colors[i][2]) / 3;
-            state.objects[0].model.colors[i] = [avgColor, avgColor, avgColor];
-        }
-        
+        saveAndTurnOffColor(state.objects[0], 'parent');
         renderModel();
     }
 });
