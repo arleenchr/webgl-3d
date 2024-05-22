@@ -269,13 +269,13 @@ const renderModel = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const selectModelContainer = document.querySelector(".select-model-container");
-    const selectMapContainer = document.querySelector(".select-map-container");
+    const selectTextureContainer = document.querySelector(".select-texture-container");
     const selectButton = document.querySelector(".select-button");
-    const selectMapButton = document.querySelector(".select-map-button");
+    const selectTextureButton = document.querySelector(".select-texture-button");
     const modelOptions = document.querySelectorAll(".model-option");
-    const mapOptions = document.querySelectorAll(".map-option");
+    const textureOptions = document.querySelectorAll(".texture-option");
     const selectButtonText = document.querySelector(".select-button-text");
-    const selectMapText =  document.querySelector(".select-map-text");
+    const selectTextureText =  document.querySelector(".select-texture-text");
 
     // For Model Loading
     selectButton.addEventListener("click", () => {
@@ -284,8 +284,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // For Map Feature
-    selectMapButton.addEventListener("click", () => {
-        selectMapContainer.classList.toggle("active");
+    selectTextureButton.addEventListener("click", () => {
+        selectTextureContainer.classList.toggle("active");
     })
 
     // Models
@@ -327,21 +327,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Maps
-    mapOptions.forEach(option => {
+    // Textures
+    textureOptions.forEach(option => {
         option.addEventListener("click", () => {
-            let selectedOption = option.querySelector(".map-option-text").innerText;
-            selectMapText.innerText = selectedOption;
-            selectMapContainer.classList.remove("active");
+            let selectedOption = option.querySelector(".texture-option-text").innerText;
+            selectTextureText.innerText = selectedOption;
+            selectTextureContainer.classList.remove("active");
 
             // TODO: Implement Logic for Maps
-            if (selectedOption === "Normal") {
+            if (selectedOption === "Texture 1") {
                 console.log(selectedOption);
-            } else if (selectedOption === "Diffuse") {
+            } else if (selectedOption === "Texture 2") {
                 console.log(selectedOption);
-            } else if (selectedOption === "Specular") {
-                console.log(selectedOption);
-            } else if (selectedOption === "Displacement") {
+            } else if (selectedOption === "Texture 3") {
                 console.log(selectedOption);
             }
         })
