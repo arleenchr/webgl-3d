@@ -269,15 +269,26 @@ const renderModel = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const selectModelContainer = document.querySelector(".select-model-container");
+    const selectMapContainer = document.querySelector(".select-map-container");
     const selectButton = document.querySelector(".select-button");
+    const selectMapButton = document.querySelector(".select-map-button");
     const modelOptions = document.querySelectorAll(".model-option");
+    const mapOptions = document.querySelectorAll(".map-option");
     const selectButtonText = document.querySelector(".select-button-text");
+    const selectMapText =  document.querySelector(".select-map-text");
 
+    // For Model Loading
     selectButton.addEventListener("click", () => {
         console.log("kepencet")
         selectModelContainer.classList.toggle("active");
     });
 
+    // For Map Feature
+    selectMapButton.addEventListener("click", () => {
+        selectMapContainer.classList.toggle("active");
+    })
+
+    // Models
     modelOptions.forEach(option => {
         option.addEventListener("click", () => {
             let selectedOption = option.querySelector(".model-option-text").innerText;
@@ -315,6 +326,26 @@ document.addEventListener("DOMContentLoaded", () => {
             option.classList.add("selected");
         });
     });
+
+    // Maps
+    mapOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            let selectedOption = option.querySelector(".map-option-text").innerText;
+            selectMapText.innerText = selectedOption;
+            selectMapContainer.classList.remove("active");
+
+            // TODO: Implement Logic for Maps
+            if (selectedOption === "Normal") {
+                console.log(selectedOption);
+            } else if (selectedOption === "Diffuse") {
+                console.log(selectedOption);
+            } else if (selectedOption === "Specular") {
+                console.log(selectedOption);
+            } else if (selectedOption === "Displacement") {
+                console.log(selectedOption);
+            }
+        })
+    })
 });
 
 
