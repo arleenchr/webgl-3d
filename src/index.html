@@ -10,35 +10,46 @@
     <body>
         <div class="toolbar-left">
             <h2 class="title">ABCV 3D WebGL</h2>
-            <div class="select-model-container">
-                <div class="select-button">
-                    <span class="select-button-text">Select model</span>
-                    <i class="bx bx-chevron-down"></i>
+            <div class="upper-container">
+                <div class="select-model-container">
+                    <div class="select-button">
+                        <span class="select-button-text">Select model</span>
+                        <i class="bx bx-chevron-down"></i>
+                    </div>
+
+                    <ul class="model-options">
+                        <li class="model-option">
+                            <p class="model-option-text">Pyramid</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Octahedron</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Cube</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Tube</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Wolf</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Duck</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Goat</p>
+                        </li>
+                    </ul>
                 </div>
 
-                <ul class="model-options">
-                    <li class="model-option">
-                        <p class="model-option-text">Pyramid</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Octahedron</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Cube</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Tube</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Wolf</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Duck</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Goat</p>
-                    </li>
-                </ul>
+                <!-- Color/Colorless Feature -->
+                <div class="color-toggle-container">
+                    <p class="color-label">Color</p>
+                    <label class="switch">
+                        <input type="checkbox" id="color-toggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
             <!-- <input type="file" id="modelFile" class="model-input" accept="application/json"> -->
             <!-- <button id="load" class="load-button">Load Model</button> -->
@@ -107,11 +118,6 @@
                 </div>
             </div>
             <div class="color-container">
-                <!-- Color Checkbox -->
-                <div class="color-checkbox">
-                    <input type="checkbox" id="color-button" checked>
-                    <label for="color-button">Colored</label>
-                </div>
                 <!-- Reflection Checkbox -->
                 <div class="color-checkbox">
                     <input type="checkbox" id="reflection-button" disabled>

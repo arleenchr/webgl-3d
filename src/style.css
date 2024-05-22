@@ -30,6 +30,18 @@
     margin-bottom: 1.5rem;
     align-self: center;
 }
+.upper-container {
+    display: flex;
+    align-items: center;
+}
+.color-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.color-label {
+    font-size: medium;
+}
 .category-title{
     line-height: 0%;
     margin-bottom: 1.5rem;
@@ -196,10 +208,6 @@
 .color-container {
     display: flex;
     flex-direction: row;
-}
-.color-checkbox {
-    margin-top: 0.75rem;
-    margin-right: 2rem;
 }
 
 .container-right{
