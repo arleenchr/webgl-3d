@@ -24,6 +24,7 @@ const setInitialState = () => {
         materialAmbient: [1, 1, 1, 1],
         materialSpecular: [1, 1, 1, 1],
         shine: 30.0,
+        lightDirection: [-1, 1, -1],
     }
 }
 
@@ -58,6 +59,11 @@ const lightAmbient = document.getElementById("light-ambient");
 const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
 const materialShininess = document.getElementById("material-shininess");
+
+//light translation
+const lightX = document.getElementById('translation-x-light');
+const lightY = document.getElementById('translation-y-light');
+const lightZ = document.getElementById('translation-z-light');
 
 let mouseDown = false;
 let lastMouseX = null;
@@ -97,7 +103,7 @@ const renderObject = (objects) => {
         let modelMatrix = matrices.multiply(view, transform);
         let nMatrix = matrices.inverse(modelMatrix);
         nMatrix = matrices.transpose(nMatrix);
-        
+        console.log("ini n matrixxxx",nMatrix)
         gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
         
         // Set material of model
@@ -123,7 +129,7 @@ const renderObject = (objects) => {
             gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
 
             var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-            gl.uniform3fv(lightDirection, [-1,1,-1]);
+            gl.uniform3fv(lightDirection, state.lightDirection);
             
             var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
             gl.uniform4fv(lightDiffuse, [1,1,1,1]);
@@ -779,6 +785,22 @@ cameraProjection.addEventListener('change', () => {
     state.projection = cameraProjection.value;
     renderModel();
 })
+
+lightX.addEventListener('input', () => {
+    state.lightDirection[0] = lightX.value;
+    renderModel();
+})
+
+lightY.addEventListener('input', () => {
+    state.lightDirection[1] = lightY.value;
+    renderModel();
+})
+
+lightZ.addEventListener('input', () => {
+    state.lightDirection[2] = lightZ.value;
+    renderModel();
+})
+
 
 /* Change Camera Radius */
 cameraRadius.addEventListener('input', () => {

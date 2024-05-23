@@ -5,7 +5,7 @@ attribute vec3 aColor;
 attribute vec3 aNormal;
 
 varying vec4 fragColor;
-varying vec4 vNormal;
+varying vec3 vNormal;
 varying float colorFactor;
 
 uniform float fudgeFactor;
@@ -30,7 +30,7 @@ void main(void) {
         gl_Position = vec4(projectedPos.xy / zDivider, projectedPos.zw);
     }
   
-    vNormal = uNormalMatrix * vec4(aNormal, 0.0);
+    vNormal = vec3(uNormalMatrix * vec4(aNormal, 1.0)); 
     fragColor = vec4(aColor, 1.0);    
     colorFactor = min(max((1.0 - transformedPos.z) / 2.0, 0.0), 1.0);
     v_color = fragColor;
@@ -48,12 +48,12 @@ uniform vec4 uLightSpecular;
 uniform vec4 uMaterialAmbient;
 uniform vec4 uMaterialSpecular;
 varying vec4 v_color;
-varying vec4 vNormal;
+varying vec3 vNormal;
 varying vec3 vEyeVec;
 
 void main(void) {
     vec3 L = normalize(uLightDirection); 
-    vec3 N = normalize(vNormal.xyz); 
+    vec3 N = normalize(vNormal); 
     float lambertTerm = dot(N,-L);
     vec4 Ia = uLightAmbient * uMaterialAmbient;
     vec4 Id = vec4(0.0, 0.0, 0.0, 1.0);
@@ -61,9 +61,9 @@ void main(void) {
     if(lambertTerm > 0.0) {
         Id = uLightDiffuse * v_color * lambertTerm;
         vec3 E = normalize(vEyeVec);
-        vec3 R = reflect(L, N);
+        vec3 R = reflect(-L, N);
         float specular = pow( max(dot(R, E), 0.0), shininess);
-        Is = uLightSpecular * uMaterialSpecular * specular;
+        Is = uLightSpecular * uMaterialSpecular * specular * v_color;
     }
     gl_FragColor = Ia + Id + Is;
 }
