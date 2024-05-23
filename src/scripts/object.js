@@ -56,11 +56,12 @@ Object.prototype.remove = function (object) {
     if (this === object) {
         return;
     }
-
     this.children.forEach(child => {
         if (child === object) {
+            console.log("found");
             var ndx = this.children.indexOf(child);
             if (ndx >= 0) {
+                delete this.children[ndx];
                 this.children.splice(ndx, 1);
             }
         } else {
@@ -71,8 +72,10 @@ Object.prototype.remove = function (object) {
 
 Object.prototype.addDefaultObject = function (name) {
     var object = new Object();
-    object.name = name;
-    object.model = generateCuboid(0.5, 0.5, 0.5, [0, 0, 0]);
+    object.name = name ? name : "cube";
+
+    let origin = getOrigin(this);
+    object.model = generateCuboid(0.5, 0.5, 0.5, origin);
     object.animation = [];
     object.frames = [];
     object.setParent(this);

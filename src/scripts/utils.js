@@ -113,6 +113,23 @@ const generateCuboid = (height, width, depth, origin) => {
     }
 }
 
+const getOrigin = (object) => {
+    let x_minus = object.model.vertices[0][0];
+    let x_plus = object.model.vertices[1][0];
+    let y_minus = object.model.vertices[0][1];
+    let y_plus = object.model.vertices[2][1];
+    let z_minus = object.model.vertices[0][2];
+    let z_plus = object.model.vertices[4][2];
+
+    let origin = [
+        (x_plus + x_minus) / 2,
+        (y_plus + y_minus) / 2,
+        (z_plus + z_minus) / 2,
+    ];
+
+    return origin;
+}
+
 const createModelSides = (model, arr) => {
     let faces = [];
     let colors = [];

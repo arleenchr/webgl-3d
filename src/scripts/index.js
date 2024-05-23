@@ -174,7 +174,7 @@ const renderModel = () => {
     // Enable depth testing
     gl.enable(gl.DEPTH_TEST);
 
-    if (state.objects[0].translate && state.objects[0].rotate && state.objects[0].scale) {
+    if (state.objects.length != 0 && state.objects[0].translate && state.objects[0].rotate && state.objects[0].scale) {
         state.objects[0].computeWorldMatrix();
     }
     console.log("OBJ: ", state.objects);
@@ -841,20 +841,20 @@ cameraProjection.addEventListener('change', () => {
     renderModel();
 })
 
-lightX.addEventListener('input', () => {
-    state.lightDirection[0] = lightX.value;
-    renderModel();
-})
+// lightX.addEventListener('input', () => {
+//     state.lightDirection[0] = lightX.value;
+//     renderModel();
+// })
 
-lightY.addEventListener('input', () => {
-    state.lightDirection[1] = lightY.value;
-    renderModel();
-})
+// lightY.addEventListener('input', () => {
+//     state.lightDirection[1] = lightY.value;
+//     renderModel();
+// })
 
-lightZ.addEventListener('input', () => {
-    state.lightDirection[2] = lightZ.value;
-    renderModel();
-})
+// lightZ.addEventListener('input', () => {
+//     state.lightDirection[2] = lightZ.value;
+//     renderModel();
+// })
 
 
 /* Change Camera Radius */
@@ -1166,6 +1166,54 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+// Model editor
+// const loadModel = document.getElementById("load-model-button");
+// const saveModel = document.getElementById("save-model-button");
+const addModel = document.getElementById('add-model-button');
+const deleteModel = document.getElementById("delete-model-button");
+
+// loadModel.addEventListener('click', () => {
+
+// });
+
+// saveModel.addEventListener('click', () => {
+    
+// });
+
+addModel.addEventListener("click", () => {
+    state.selectedObject.addDefaultObject();
+    resetSceneGraph();
+    generateSceneGraph(state.objects);
+    renderModel();
+});
+
+deleteModel.addEventListener('click', () => {
+    // state.objects.forEach(endObject => {
+    //     if (endObject === state.selectedObject) {
+    //         var ndx = state.objects.indexOf(endObject);
+    //         if (ndx >= 0) {
+    //             delete state.objects[ndx];
+    //             state.objects.splice(ndx, 1);
+    //         }
+    //     }
+    //     else {
+    //         endObject.remove(state.selectedObject);
+    //     }
+    // });
+
+    if (state.objects[0] === state.selectedObject) {
+        delete state.objects[0];
+        state.objects.splice(0, 1);
+    }
+    else {
+        state.objects[0].remove(state.selectedObject);
+    }
+    state.selectedObject = null;
+    resetSceneGraph();
+    generateSceneGraph(state.objects);
+    renderModel();
+    console.log(state);
+});
 
 
 window.onload = () => {
