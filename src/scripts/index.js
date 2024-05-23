@@ -1167,18 +1167,29 @@ function animate() {
 }
 
 // Model editor
-// const loadModel = document.getElementById("load-model-button");
-// const saveModel = document.getElementById("save-model-button");
+const loadFile = document.getElementById("load-file");
+const loadModel = document.getElementById("load-model-button");
+const saveModel = document.getElementById("save-model-button");
 const addModel = document.getElementById('add-model-button');
 const deleteModel = document.getElementById("delete-model-button");
 
-// loadModel.addEventListener('click', () => {
+loadFile.addEventListener('change', () => {
+    const file = loadFile.files[0];
 
-// });
+    if (file) {
+        state.objects[0].loadObject(state.selectedObject, file);
+    }
 
-// saveModel.addEventListener('click', () => {
-    
-// });
+    loadFile.value = null;
+});
+
+loadModel.addEventListener('click', () => {    
+    loadFile.click();
+});
+
+saveModel.addEventListener('click', () => {
+    state.selectedObject.saveObject();
+});
 
 addModel.addEventListener("click", () => {
     state.selectedObject.addDefaultObject();
@@ -1212,7 +1223,6 @@ deleteModel.addEventListener('click', () => {
     resetSceneGraph();
     generateSceneGraph(state.objects);
     renderModel();
-    console.log(state);
 });
 
 

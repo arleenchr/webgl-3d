@@ -58,7 +58,6 @@ Object.prototype.remove = function (object) {
     }
     this.children.forEach(child => {
         if (child === object) {
-            console.log("found");
             var ndx = this.children.indexOf(child);
             if (ndx >= 0) {
                 delete this.children[ndx];
@@ -87,47 +86,46 @@ Object.prototype.saveObject = function () {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "data.json";
+    a.download = this.name + ".json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
 
-Object.prototype.loadObject = function (file) {
+Object.prototype.loadObject = function (currentObject, file) {
+    var objects = [this];
     var reader = new FileReader();
     reader.onload = function (e) {
         var data = JSON.parse(e.target.result);
         var newObj = loadObject(data);
-        newObj.forEach(object => {
-            object.setParent(this);
-        });
+        newObj.setParent(currentObject);
+        resetSceneGraph();
+        generateSceneGraph(objects);
+        renderModel();
     }
     reader.readAsText(file);
-
 }
 
 function loadObject(data) {
-    objects = [];
-    data.forEach(object => {
-        var temp = new Object();
-        temp.name = object.name;
-        temp.model = object.model;
-        temp.animation = object.animation;
-        temp.frames = object.frames;
-        temp.translate = object.translate;
-        temp.rotate = object.rotate;
-        temp.scale = object.scale;
-        temp.localMatrix = object.localMatrix;
-        temp.worldMatrix = object.worldMatrix;
-        temp.parent = object.parent;
+    var object = new Object();
+    object.name = data.name;
+    object.model = data.model;
+    object.animation = data.animation;
+    object.frames = data.frames;
+    object.translate = data.translate;
+    object.rotate = data.rotate;
+    object.scale = data.scale;
+    object.localMatrix = data.localMatrix;
+    object.worldMatrix = data.worldMatrix;
+    object.parent = data.parent;
+    object.children = [];
 
-        if (object.children.length > 0) {
-            temp.children = loadObject(object.children);
-        }
-
-        objects.push(temp);
-    });
+    if (data.children.length > 0) {
+        data.children.forEach(child => {
+            object.children.push(loadObject(child));
+        });
+    }
     
-    return objects;
+    return object;
 }
