@@ -63,7 +63,7 @@ void main(void) {
         vec3 E = normalize(vEyeVec);
         vec3 R = reflect(-L, N);
         float specular = pow( max(dot(R, E), 0.0), shininess);
-        Is = uLightSpecular * uMaterialSpecular * specular * v_color;
+        Is = uLightSpecular * uMaterialSpecular * specular ;
     }
     gl_FragColor = Ia + Id + Is;
 }
