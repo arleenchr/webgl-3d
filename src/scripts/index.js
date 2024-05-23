@@ -3,9 +3,9 @@ var state;
 // Set initial state for webgl canvas
 const setInitialState = () => {
     state = {
-        objects: endObject,
+        objects: endObject, // Notes: Can be modified to make testing model faster
         selectedObject: null,
-        savedColor: null,
+        savedColor: {},
         chosenColor: [1, 0, 0],
         viewMatrix: {
             // x, y, z
@@ -32,7 +32,7 @@ setInitialState();
 
 var canvas = document.querySelector("#gl-canvas")
 const modelInput = document.getElementById("modelFile");
-const colorCheckbox = document.getElementById("color-button");
+const colorToggle = document.getElementById("color-toggle");
 
 const transX = document.getElementById('translation-x-slider');
 const transY = document.getElementById('translation-y-slider');
@@ -60,10 +60,11 @@ const materialAmbient = document.getElementById("material-ambient");
 const materialSpecular = document.getElementById("material-specular");
 const materialShininess = document.getElementById("material-shininess");
 
-//light translation
-const lightX = document.getElementById('translation-x-light');
-const lightY = document.getElementById('translation-y-light');
-const lightZ = document.getElementById('translation-z-light');
+// TODO: Implement Logic
+const diffuseIntensity = document.getElementById("diffuse-intensity");
+const normalIntensity = document.getElementById("normal-intensity");
+const specularIntensity = document.getElementById("specular-intensity");
+const displacementIntensity = document.getElementById("displacement-intensity");
 
 let mouseDown = false;
 let lastMouseX = null;
@@ -173,8 +174,9 @@ const renderModel = () => {
     // Enable depth testing
     gl.enable(gl.DEPTH_TEST);
 
-    state.objects[0].computeWorldMatrix();
-
+    if (state.objects[0].translate && state.objects[0].rotate && state.objects[0].scale) {
+        state.objects[0].computeWorldMatrix();
+    }
     console.log("OBJ: ", state.objects);
     renderObject(state.objects);
     console.log(state);
@@ -274,15 +276,26 @@ const renderModel = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const selectModelContainer = document.querySelector(".select-model-container");
+    const selectTextureContainer = document.querySelector(".select-texture-container");
     const selectButton = document.querySelector(".select-button");
+    const selectTextureButton = document.querySelector(".select-texture-button");
     const modelOptions = document.querySelectorAll(".model-option");
+    const textureOptions = document.querySelectorAll(".texture-option");
     const selectButtonText = document.querySelector(".select-button-text");
+    const selectTextureText =  document.querySelector(".select-texture-text");
 
+    // For Model Loading
     selectButton.addEventListener("click", () => {
         console.log("kepencet")
         selectModelContainer.classList.toggle("active");
     });
 
+    // For Map Feature
+    selectTextureButton.addEventListener("click", () => {
+        selectTextureContainer.classList.toggle("active");
+    })
+
+    // Models
     modelOptions.forEach(option => {
         option.addEventListener("click", () => {
             let selectedOption = option.querySelector(".model-option-text").innerText;
@@ -320,6 +333,24 @@ document.addEventListener("DOMContentLoaded", () => {
             option.classList.add("selected");
         });
     });
+
+    // Textures
+    textureOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            let selectedOption = option.querySelector(".texture-option-text").innerText;
+            selectTextureText.innerText = selectedOption;
+            selectTextureContainer.classList.remove("active");
+
+            // TODO: Implement Logic for Maps
+            if (selectedOption === "Texture 1") {
+                console.log(selectedOption);
+            } else if (selectedOption === "Texture 2") {
+                console.log(selectedOption);
+            } else if (selectedOption === "Texture 3") {
+                console.log(selectedOption);
+            }
+        })
+    })
 });
 
 
@@ -371,29 +402,46 @@ document.addEventListener("DOMContentLoaded", () => {
 //     reader.readAsText(file);    
 // });
 
-colorCheckbox.addEventListener("change", () => {
-    console.log("Color:", state.objects[0].model.colors);
-    if (colorCheckbox.checked) {
-        console.log("Checked");
+// Save colors and turn off the color (turn into greyish)
+const saveAndTurnOffColor = (object, path) => {
+    // Save the object's colors
+    state.savedColor[path] = object.model.colors.map(color => color.slice());
+
+    // Turn the object's colors to greyish color
+    for (let i = 0; i < object.model.colors.length; i++) {
+        let avgColor = (object.model.colors[i][0] + object.model.colors[i][1] + object.model.colors[i][2]) / 3;
+        object.model.colors[i] = [avgColor, avgColor, avgColor];
+    }
+
+    // Recursively process children
+    for (let j = 0; j < object.children.length; j++) {
+        saveAndTurnOffColor(object.children[j], `${path}.child${j}`);
+    }
+}
+
+// Restore object's original color
+function restoreColors(object, path) {
+    // Restore the object's colors
+    for (let i = 0; i < object.model.colors.length; i++) {
+        object.model.colors[i] = state.savedColor[path][i].slice();
+    }
+
+    // Recursively process the object's children
+    for (let j = 0; j < object.children.length; j++) {
+        restoreColors(object.children[j], `${path}.child${j}`);
+    }
+}
+
+colorToggle.addEventListener("change", () => {
+    if (colorToggle.checked) {
         if (state.savedColor != null) {
-            console.log("There are saved colors")
-            for (let i = 0; i < state.savedColor.length; i++) {
-                state.objects[0].model.colors[i] = state.savedColor[i];
-            }
+            restoreColors(state.objects[0], 'parent');
         } else {
             console.log("There are no saved colors");
         }
         renderModel();
     } else {
-        console.log("Unchecked");
-        state.savedColor = state.objects[0].model.colors.map(color => color.slice());
-        // Change color to gray
-        for (let i = 0; i < state.objects[0].model.colors.length; i++) {
-            // Calculate the average of the RGB values to get a gray color
-            let avgColor = (state.objects[0].model.colors[i][0] + state.objects[0].model.colors[i][1] + state.objects[0].model.colors[i][2]) / 3;
-            state.objects[0].model.colors[i] = [avgColor, avgColor, avgColor];
-        }
-        
+        saveAndTurnOffColor(state.objects[0], 'parent');
         renderModel();
     }
 });
@@ -466,8 +514,7 @@ const setObjGeometry = (gl, model) => {
     const normalBuff = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuff);
     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-  
-    // console.log("LenFaces HOHO:", faces.length);
+
     return { vertexBuff: vertexBuff, normalBuff: normalBuff, faceBuff: faceBuff, lenFaces: faces.length };
 }
 
@@ -598,24 +645,24 @@ const setColor = (gl, model) => {
 /* Translate X */
 transX.addEventListener('input', () => {
     state.selectedObject.translate[0] = transX.value / 100;
-    const translationX = document.getElementById('translation-x');
-    translationX.innerText = transX.value / 100;
+    // const translationX = document.getElementById('translation-x');
+    // translationX.innerText = transX.value;
     renderModel();
 })
 
 /* Translate Y */
 transY.addEventListener('input', () => {
     state.selectedObject.translate[1] = transY.value / 100;
-    const translationY = document.getElementById('translation-y');
-    translationY.innerText = transY.value / 100;
+    // const translationY = document.getElementById('translation-y');
+    // translationY.innerText = transY.value;
     renderModel();
 })
 
 /* Translate Z */
 transZ.addEventListener('input', () => {
     state.selectedObject.translate[2] = -transZ.value / 100;
-    const translationZ = document.getElementById('translation-z');
-    translationZ.innerText = -transZ.value / 100;
+    // const translationZ = document.getElementById('translation-z');
+    // translationZ.innerText = -transZ.value;
     renderModel();
 })
 
@@ -738,6 +785,10 @@ materialRadio.forEach((radio) => {
             materialAmbient.disabled=true;
             materialSpecular.disabled=true;
             materialShininess.disabled=true;
+            diffuseIntensity.disabled=true;
+            normalIntensity.disabled=true;
+            specularIntensity.disabled=true;
+            displacementIntensity.disabled=true;
 
             program = createProgram(gl,vertex_shader, fragment_shader_basic);
         }
@@ -747,6 +798,10 @@ materialRadio.forEach((radio) => {
             materialAmbient.disabled=false;
             materialSpecular.disabled=false;
             materialShininess.disabled=false;
+            diffuseIntensity.disabled=false;
+            normalIntensity.disabled=false;
+            specularIntensity.disabled=false;
+            displacementIntensity.disabled=false;
 
             program = createProgram(gl,vertex_shader, fragment_shader_phong);
         }
@@ -872,12 +927,10 @@ let currentTime = 0;
 let animationSpeed = 1;
 let animationPaused = true;
 let desiredFPS = 3; // default
-let totalFrames = hollowAnim.frames.length;
+let totalFrames = hollowAnim.frames.length; // Default
 let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
-
-animationSlider.max = totalFrames - 1;
 
 playPauseButton.addEventListener('click', toggleAnimation);
 fpsInput.addEventListener('input', function() {
@@ -953,7 +1006,7 @@ function updateAnimationTime(deltaTime) {
         }
     }
 
-    animationSlider.value = Math.floor(currentTime * desiredFPS);
+    animationSlider.value = Math.floor((currentTime / totalAnimationTime) * totalFrames);
 }
 
 function lerp(a, b, t) {
@@ -1052,20 +1105,28 @@ function interpolateArticulatedFrames(frames, currentTime) {
 }
 
 function applyAnimationToArticulatedModel(object) {
+    console.log(object.frames.length);
     if (object.frames.length != 0) {
         const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
 
+        // Update animation slider
+        totalFrames = object.frames.length;
+        animationSlider.max = totalFrames - 1;
+
         object.translate = [
-            interpolatedFrame.translate[0],
-            interpolatedFrame.translate[1],
-            interpolatedFrame.translate[2] 
+            interpolatedFrame?.translate[0],
+            interpolatedFrame?.translate[1],
+            interpolatedFrame?.translate[2]
         ];
+
+        // Notes: Input MUST BE in radian
         object.rotate = [
-            interpolatedFrame.rotate[0],
-            interpolatedFrame.rotate[1],
-            interpolatedFrame.rotate[2] 
+            interpolatedFrame?.rotate[0],
+            interpolatedFrame?.rotate[1],
+            interpolatedFrame?.rotate[2]
         ]
-        object.scale = interpolatedFrame.scale;
+
+        object.scale = interpolatedFrame?.scale;
     }
 
     if (object.children.length > 0) {
@@ -1089,14 +1150,17 @@ function animate() {
 
     if (hollowModel.includes(state.objects[0].name)) {
         const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+
+        // Update animation slider
+        animationSlider.max = totalFrames - 1;
         applyTransformations(interpolatedFrame);
     }
     else {
         totalFrames = state.objects[0].frames.length;
-        totalAnimationTime = 10;
+        totalAnimationTime = state.objects[0].frames.length;
+
         applyAnimationToArticulatedModel(state.objects[0]);
     }
-    
 
     renderModel();
     requestAnimationFrame(animate);

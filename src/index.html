@@ -10,35 +10,46 @@
     <body>
         <div class="toolbar-left">
             <h2 class="title">ABCV 3D WebGL</h2>
-            <div class="select-model-container">
-                <div class="select-button">
-                    <span class="select-button-text">Select model</span>
-                    <i class="bx bx-chevron-down"></i>
+            <div class="upper-container">
+                <div class="select-model-container">
+                    <div class="select-button">
+                        <span class="select-button-text">Select model</span>
+                        <i class="bx bx-chevron-down"></i>
+                    </div>
+
+                    <ul class="model-options">
+                        <li class="model-option">
+                            <p class="model-option-text">Pyramid</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Octahedron</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Cube</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Tube</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Wolf</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Duck</p>
+                        </li>
+                        <li class="model-option">
+                            <p class="model-option-text">Goat</p>
+                        </li>
+                    </ul>
                 </div>
 
-                <ul class="model-options">
-                    <li class="model-option">
-                        <p class="model-option-text">Pyramid</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Octahedron</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Cube</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Tube</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Wolf</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Duck</p>
-                    </li>
-                    <li class="model-option">
-                        <p class="model-option-text">Goat</p>
-                    </li>
-                </ul>
+                <!-- Color/Colorless Feature -->
+                <div class="color-toggle-container">
+                    <p class="color-label">Color</p>
+                    <label class="switch">
+                        <input type="checkbox" id="color-toggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
             <!-- <input type="file" id="modelFile" class="model-input" accept="application/json"> -->
             <!-- <button id="load" class="load-button">Load Model</button> -->
@@ -52,7 +63,7 @@
                         <option value="perspective">Perspective</option>
                     </select>
                     <div class="radius-input-container">
-                        <h3 class="sub-category-title">Radius</h3>
+                        <h3 class="radius-title">Radius</h3>
                         <input type="range" min="0" max="100" step="5" value="0" class="radius-slider" id="radius-slider">
                     </div>
                 </div>
@@ -70,31 +81,71 @@
                         <label for="phong-button" class="radio-label">Phong</label><br>
                     </div>
                 </div>
-                <h3 class="sub-category-title">Material Atribut</h3>
+                <h2 class="material-attr-title">Material Attributes</h2>
                 <div class="material-atribut-container">
-                    <div class="transformation-input-container">
-                        <p class="transformation-label">Light Ambient</p>
-                        <p class="transformation-label">0</p>
-                        <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="light-ambient">
-                        <p class="transformation-label">1</p>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Light Ambient</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="light-ambient">
+                            <p class="transformation-label">1</p>
+                        </div>
                     </div>
-                    <div class="transformation-input-container">
-                        <p class="transformation-label">Material Ambient</p>
-                        <p class="transformation-label">0</p>
-                        <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-ambient" disabled>
-                        <p class="transformation-label">1</p>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Material Ambient</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-ambient" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
                     </div>
-                    <div class="transformation-input-container">
-                        <p class="transformation-label">Material Specular</p>
-                        <p class="transformation-label">0</p>
-                        <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-specular" disabled>
-                        <p class="transformation-label">1</p>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Material Specular</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.01" value="0.3" class="animation-slider" id="material-specular" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
                     </div>
-                    <div class="transformation-input-container">
-                        <p class="transformation-label">Material Shininess</p>
-                        <p class="transformation-label">0.1</p>
-                        <input type="range" min="0.1" max="100" step="1" value="30" class="animation-slider" id="material-shininess" disabled>
-                        <p class="transformation-label">100</p>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Material Shininess</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0.1</p>
+                            <input type="range" min="0.1" max="100" step="1" value="30" class="animation-slider" id="material-shininess" disabled>
+                            <p class="transformation-label">100</p>
+                        </div>
+                    </div>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Diffuse Intensity</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.1" value="0.3" class="animation-slider" id="diffuse-intensity" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
+                    </div>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Normal Intensity</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.1" value="0.3" class="animation-slider" id="normal-intensity" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
+                    </div>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Specular Intensity</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.1" value="0.3" class="animation-slider" id="specular-intensity" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
+                    </div>
+                    <div class="material-input-container">
+                        <p class="material-attr-label">Displacement Intensity</p>
+                        <div class="material-slider-container">
+                            <p class="transformation-label">0</p>
+                            <input type="range" min="0" max="1" step="0.1" value="0.3" class="animation-slider" id="displacement-intensity" disabled>
+                            <p class="transformation-label">1</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,16 +172,32 @@
                 </div>
             </div> -->
             <div class="color-container">
-                <!-- Color Checkbox -->
-                <div class="color-checkbox">
-                    <input type="checkbox" id="color-button" checked>
-                    <label for="color-button">Colored</label>
-                </div>
                 <!-- Reflection Checkbox -->
                 <div class="color-checkbox">
                     <input type="checkbox" id="reflection-button" disabled>
                     <label for="reflection-button">Reflection</label>
                 </div>
+            </div>
+
+            <!-- For Map Feature: Normal, Diffuse, Specular, Displacement  -->
+            <h2 class="texture-title">Map</h2>
+            <div class="select-texture-container">
+                <div class="select-texture-button">
+                    <span class="select-texture-text">Select texture</span>
+                    <i class="bx bx-chevron-down"></i>
+                </div>
+
+                <ul class="texture-options">
+                    <li class="texture-option">
+                        <p class="texture-option-text">Texture 1</p>
+                    </li>
+                    <li class="texture-option">
+                        <p class="texture-option-text">Texture 2</p>
+                    </li>
+                    <li class="texture-option">
+                        <p class="texture-option-text">Texture 3</p>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="container-right">
@@ -140,7 +207,7 @@
             <div class="toolbar-bottom">
                 <div class="animation-controller">
                     <h2 class="category-title">Animation</h2>
-                    <button id="play-pause-button" class="play-pause-button">Play animation</button>
+                    <button id="play-pause-button" class="play-pause-button">Play Animation</button>
                     <div class="fps-input-container">
                         <input type="number" id="fps-input" name="fps-input" class="fps-input" value="3">
                         <label for="fps-input" class="radio-label">FPS</label><br>
