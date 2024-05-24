@@ -98,7 +98,7 @@ Object.prototype.loadObject = function (currentObject, file) {
     var reader = new FileReader();
     reader.onload = function (e) {
         var data = JSON.parse(e.target.result);
-        var newObj = loadObject(data);
+        var newObj = loadObject(data, currentObject);
         newObj.setParent(currentObject);
         resetSceneGraph();
         generateSceneGraph(objects);
@@ -107,7 +107,7 @@ Object.prototype.loadObject = function (currentObject, file) {
     reader.readAsText(file);
 }
 
-function loadObject(data) {
+function loadObject(data, currentObject) {
     var object = new Object();
     object.name = data.name;
     object.model = data.model;
@@ -121,9 +121,11 @@ function loadObject(data) {
     object.parent = data.parent;
     object.children = [];
 
+    object.model.vertices = updateVerticesOrigin(object.model.vertices, currentObject);
+
     if (data.children.length > 0) {
         data.children.forEach(child => {
-            object.children.push(loadObject(child));
+            object.children.push(loadObject(child, currentObject));
         });
     }
     
