@@ -94,7 +94,7 @@
 .select-button {
     display: flex;
     height: fit-content;
-    width: 40%;
+    width: 50%;
     background: #646f75;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -108,7 +108,7 @@
 .select-texture-button {
     display: flex;
     height: fit-content;
-    width: 40%;
+    width: 50%;
     background: #646f75;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -130,7 +130,7 @@
 
 .model-options {
     position: absolute;
-    width:40%;
+    width:50%;
     top: 100%;
     left: 0;
     z-index: 1;
@@ -144,7 +144,7 @@
 }
 .texture-options {
     position: absolute;
-    width:40%;
+    width:50%;
     top: 100%;
     left: 0;
     z-index: 1;
@@ -215,6 +215,34 @@
 }
 .selected {
     background-color: #777f83;
+}
+
+.model-editor-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 2.5vh;
+}
+.model-editor-buttons {
+    display: grid;
+    gap: 1vh;
+    grid-template-columns: repeat(4, 1fr);
+}
+.add-model-button, .load-model-button, .save-model-button {
+    flex-grow: 1;
+    background-color: #189ee6;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 1vh;
+}
+.delete-model-button {
+    flex-grow: 1;
+    background-color: #F75D5D;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 1vh;
 }
 
 .camera-settings-container{
