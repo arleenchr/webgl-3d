@@ -942,11 +942,26 @@ fpsInput.addEventListener('input', function() {
     console.log(desiredFPS);
 });
 
+let hollowModel = ["pyramid", "octahedron", "tube"];
+let articulatedModel = ["cube", "wolf", "duck", "goat"];
+
 animationSlider.addEventListener('input', function() {
     currentTime = animationSlider.value / desiredFPS;
-    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
-    applyTransformations(interpolatedFrame);
-    renderModel();
+    
+    let interpolatedFrame;
+
+    console.log(state.objects[0])
+
+    if (hollowModel.includes(state.objects[0].name)) {
+        interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+        applyTransformations(interpolatedFrame);
+    } else {
+        interpolatedFrame = interpolateArticulatedFrames(state.objects[0].frames, currentTime);
+        console.log(interpolatedFrame)
+        // applyAnimationToArticulatedModel(state.objects[0])
+        applyTransformationsArticulated(interpolatedFrame)
+    }
+
     if (!animationPaused) {
         lastFrameTime = performance.now();
     }
@@ -1039,12 +1054,12 @@ function interpolateKeyframes(frames, currentTime) {
     // let easedT = easeInSine(t);
 
     let interpolatedFrame = {
-        translation: [
+        translate: [
             lerp(prevFrame.keyframe.translation[0], nextFrame.keyframe.translation[0], easedT),
             lerp(prevFrame.keyframe.translation[1], nextFrame.keyframe.translation[1], easedT),
             lerp(prevFrame.keyframe.translation[2], nextFrame.keyframe.translation[2], easedT)
         ],
-        rotation: [
+        rotate: [
             lerp(prevFrame.keyframe.rotation[0], nextFrame.keyframe.rotation[0], easedT),
             lerp(prevFrame.keyframe.rotation[1], nextFrame.keyframe.rotation[1], easedT),
             lerp(prevFrame.keyframe.rotation[2], nextFrame.keyframe.rotation[2], easedT)
@@ -1063,17 +1078,19 @@ function applyTransformations(animationData) {
     if (!animationData) return;
 
     state.objects[0].translate = [
-        animationData.translation[0] / 100,
-        animationData.translation[1] / 100,
-        animationData.translation[2] / 100
+        animationData.translate[0] / 100,
+        animationData.translate[1] / 100,
+        animationData.translate[2] / 100
     ];
     state.objects[0].rotate = [
-        animationData.rotation[0] * Math.PI / 100,
-        animationData.rotation[1] * Math.PI / 100,
-        animationData.rotation[2] * Math.PI / 100
+        animationData.rotate[0] * Math.PI / 100,
+        animationData.rotate[1] * Math.PI / 100,
+        animationData.rotate[2] * Math.PI / 100
     ]
     state.objects[0].scale = animationData.scale;
     renderModel();
+
+    console.log("transformation applied!")
 }
 
 function interpolateArticulatedFrames(frames, currentTime) {
@@ -1086,29 +1103,51 @@ function interpolateArticulatedFrames(frames, currentTime) {
         return null;
     }
 
+    let t = currentTime - prevFrameIndex;
+    let easedT = easeOutSine(t);
+
     let interpolatedFrame = {
         translate: [
-            lerp(prevFrame.translate[0], nextFrame.translate[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.translate[1], nextFrame.translate[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.translate[2], nextFrame.translate[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.translate[1], nextFrame.translate[1], easedT),
+            lerp(prevFrame.translate[0], nextFrame.translate[0], easedT),
+            lerp(prevFrame.translate[2], nextFrame.translate[2], easedT)
         ],
         rotate: [
-            lerp(prevFrame.rotate[0], nextFrame.rotate[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.rotate[1], nextFrame.rotate[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.rotate[2], nextFrame.rotate[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.rotate[0], nextFrame.rotate[0], easedT),
+            lerp(prevFrame.rotate[1], nextFrame.rotate[1], easedT),
+            lerp(prevFrame.rotate[2], nextFrame.rotate[2], easedT)
         ],
         scale: [
-            lerp(prevFrame.scale[0], nextFrame.scale[0], currentTime - prevFrameIndex),
-            lerp(prevFrame.scale[1], nextFrame.scale[1], currentTime - prevFrameIndex),
-            lerp(prevFrame.scale[2], nextFrame.scale[2], currentTime - prevFrameIndex)
+            lerp(prevFrame.scale[0], nextFrame.scale[0], easedT),
+            lerp(prevFrame.scale[1], nextFrame.scale[1], easedT),
+            lerp(prevFrame.scale[2], nextFrame.scale[2], easedT)
         ]
     };
 
     return interpolatedFrame;
 }
 
+function applyTransformationsArticulated(animationData) {
+    if (!animationData) return;
+
+    state.objects[0].translate = [
+        animationData.translate[0] / 100,
+        animationData.translate[1] / 100,
+        animationData.translate[2] / 100
+    ];
+    state.objects[0].rotate = [
+        animationData.rotate[0] * Math.PI / 100,
+        animationData.rotate[1] * Math.PI / 100,
+        animationData.rotate[2] * Math.PI / 100
+    ]
+    state.objects[0].scale = animationData.scale;
+    renderModel();
+
+    console.log("transformation applied!")
+}
+
 function applyAnimationToArticulatedModel(object) {
-    console.log(object.frames.length);
+    // console.log(object.frames.length);
     if (object.frames.length != 0) {
         const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
 
@@ -1138,9 +1177,6 @@ function applyAnimationToArticulatedModel(object) {
         });
     }
 }
-
-let hollowModel = ["pyramid", "octahedron", "tube"];
-let articulatedModel = ["cube", "wolf", "duck", "goat"];
 
 function animate() {
     if (animationPaused) return;
