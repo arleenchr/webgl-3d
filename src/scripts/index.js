@@ -323,6 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (selectedOption === "Goat"){
                 state.objects = goatObject;
             }
+            else if (selectedOption === "Perry") {
+                state.objects = perryObject;
+            }
 
             state.selectedObject = state.objects[0];
             resetSceneGraph();

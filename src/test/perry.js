@@ -42,6 +42,6 @@ perryBeak.model = generateCuboid(0.3, 0.15, 0.3, [-0.8, -0.1, 0]);
 perryBeak.setParent(perryHead);
 
 
-var endObject = [
+var perryObject = [
     perry,
 ];

@@ -130,6 +130,36 @@ const getOrigin = (object) => {
     return origin;
 }
 
+const generateCubeFaces = () => {
+    let blockFaces = [
+        [1, 3, 2],
+        [4, 2, 3],
+        [1, 2, 5],
+        [6, 5, 2],
+        [1, 5, 3],
+        [5, 7, 3],
+        [2, 4, 6],
+        [8, 6, 4],
+        [4, 3, 8],
+        [7, 8, 3],
+        [5, 6, 7],
+        [8, 7, 6],
+    ];
+
+    let cubeFaces = [];
+
+    for (let i = 0; i < 12; i++) {
+        for (let j = 0; j < blockFaces.length; j++) {
+            let temp = [];
+            for (let k = 0; k < 3; k++) {
+                temp.push(blockFaces[j][k] + i * 8);
+            }
+            cubeFaces.push(temp);
+        }
+    }
+    return cubeFaces;
+}
+
 const createModelSides = (model, arr) => {
     let faces = [];
     let colors = [];
