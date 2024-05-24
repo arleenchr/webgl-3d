@@ -10,44 +10,48 @@ wolf.name = 'wolf';
 wolf.model = generateCuboid(0, 0, 0, [0, 0, 0]);
 
 wolf.animation = [
+    still,
     {
-        translate: [0, 0, 0],
-        rotate: [0, Math.PI/2, 0],
+        translate: [0, 0.1, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
         scale: [1, 1, 1],
     },
     {
         translate: [0, 0, 0],
-        rotate: [0, Math.PI/2, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
         scale: [1, 1, 1],
     },
     {
         translate: [0, 0, 0],
-        rotate: [0, Math.PI/2, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/16, Math.PI/3, 0],
         scale: [1, 1, 1],
     },
     still,
-    still,
-    still,
-    {
-        translate: [0, 0, 0],
-        rotate: [0, -Math.PI/2, 0],
-        scale: [1, 1, 1],
-    },
-    {
-        translate: [0, 0, 0],
-        rotate: [0, -Math.PI/2, 0],
-        scale: [1, 1, 1],
-    },
-    {
-        translate: [0, 0, 0],
-        rotate: [0, -Math.PI/2, 0],
-        scale: [1, 1, 1],
-    },
-    {
-        translate: [0, 0, 0],
-        rotate: [0, -Math.PI, 0],
-        scale: [1, 1, 1],
-    },
 ];
 addFramesToObject(wolf);
 
@@ -60,12 +64,36 @@ head.setParent(wolf);
 head.animation = [
     still,
     still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.03, 0, 0],
+        rotate: [0, 0, -Math.PI/24],
+        scale: [1, 1, 1],
+    },
     still,
     still,
 ];
@@ -161,10 +189,26 @@ jaw.animation = [
     still,
     still,
     still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0.1, 0],
+        rotate: [0, 0, Math.PI/35],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [0, 0, Math.PI/35],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [0, 0, Math.PI/35],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0.1, 0],
+        rotate: [0, 0, Math.PI/35],
+        scale: [1, 1, 1],
+    },
     still,
     still,
     still,
@@ -253,101 +297,293 @@ addFramesToObject(body);
 
 const tail = new Object();
 tail.name = 'tail';
-tail.model = generateCuboid(0.4, 0.4, 0.2, [0.6, 0.2, 0]);
+tail.model = generateCuboid(0.4, 0.6, 0.2, [0.6, 0.2, 0]);
 setSolidColor(tail.model, darkerFurColor);
 tail.setParent(body);
 
 tail.animation = [
     still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, -Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, -Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, -Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, -Math.PI/36, -Math.PI/36],
+        scale: [1, 1, 1],
+    },
     still,
 ]
 addFramesToObject(tail);
 
 const frontLeftLeg = new Object();
 frontLeftLeg.name = 'frontLeftLeg'
-frontLeftLeg.model = generateCuboid(0.75, 0.15, 0.15, [-0.25, -0.9, -0.15]);
+frontLeftLeg.model = generateCuboid(1.4, 0.18, 0.18, [-0.25, -0.7, -0.15]);
 setSolidColor(frontLeftLeg.model, furColor);
 frontLeftLeg.setParent(chest);
 
 frontLeftLeg.animation = [
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(frontLeftLeg);
 
 const frontRighttLeg = new Object();
 frontRighttLeg.name = 'frontRighttLeg'
-frontRighttLeg.model = generateCuboid(0.75, 0.15, 0.15, [-0.25, -0.9, 0.15]);
+frontRighttLeg.model = generateCuboid(1.4, 0.18, 0.18, [-0.25, -0.7, 0.15]);
 setSolidColor(frontRighttLeg.model, furColor);
 frontRighttLeg.setParent(chest);
 
 frontRighttLeg.animation = [
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(frontRighttLeg);
 
 const backLeftLeg = new Object();
 backLeftLeg.name = 'backLeftLeg'
-backLeftLeg.model = generateCuboid(0.75, 0.15, 0.15, [0.25, -0.9, -0.15]);
+backLeftLeg.model = generateCuboid(1.4, 0.18, 0.18, [0.25, -0.7, -0.15]);
 setSolidColor(backLeftLeg.model, furColor);
 backLeftLeg.setParent(body);
 
 backLeftLeg.animation = [
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(backLeftLeg);
 
 const backRightLeg = new Object();
 backRightLeg.name = 'backRightLeg'
-backRightLeg.model = generateCuboid(0.75, 0.15, 0.15, [0.25, -0.9, 0.15]);
+backRightLeg.model = generateCuboid(1.4, 0.18, 0.18, [0.25, -0.7, 0.15]);
 setSolidColor(backRightLeg.model, furColor);
 backRightLeg.setParent(body);
 
 backRightLeg.animation = [
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/16],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(backRightLeg);
 
