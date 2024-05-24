@@ -130,6 +130,21 @@ const getOrigin = (object) => {
     return origin;
 }
 
+const updateVerticesOrigin = (objectVertices, currentObject) => {
+    let currObjectOrigin = getOrigin(currentObject);
+
+    let newVertices = [];
+    for (let i = 0; i < objectVertices.length; i++) {
+        let temp = [];
+        for (let j = 0; j < objectVertices[i].length; j++) {
+            temp.push(objectVertices[i][j] + currObjectOrigin[j]);
+        }
+        newVertices.push(temp);
+    }
+
+    return newVertices;
+}
+
 const generateCubeFaces = () => {
     let blockFaces = [
         [1, 3, 2],
