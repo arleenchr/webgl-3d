@@ -934,12 +934,14 @@ let totalFrames = hollowAnim.frames.length; // Default
 let totalAnimationTime = hollowAnim.frames.length / desiredFPS;
 let lastFrameTime = performance.now();
 let isReversed = false;
+let isFPSChanged = false;
 
 playPauseButton.addEventListener('click', toggleAnimation);
 fpsInput.addEventListener('input', function() {
     desiredFPS = parseInt(this.value);
     totalAnimationTime = hollowAnim.frames.length / desiredFPS;
-    console.log(desiredFPS);
+    isFPSChanged = true;
+    playPauseButton.textContent = "Play Animation";
 });
 
 let hollowModel = ["pyramid", "octahedron", "tube"];
@@ -960,7 +962,7 @@ animationSlider.addEventListener('input', function() {
         interpolatedFrame = interpolateArticulatedFrames(state.objects[0].frames, currentTime);
         applyAnimationToArticulatedModel(state.objects[0]);
         applyTransformationsArticulated(interpolatedFrame);
-        renderModel();
+        // renderModel();
     }
 
     if (!animationPaused) {
@@ -998,12 +1000,18 @@ reverseToggle.addEventListener('change', function() {
 });
 
 function toggleAnimation() {
+    if (isFPSChanged) {
+        console.log("CHANGED");
+        animationPaused = true;
+        isFPSChanged = false;
+    }
     animationPaused = !animationPaused;
     if (!animationPaused) {
         lastFrameTime = performance.now(); // reset frame time on start
         if (isReversed) {
             // Update total frames
             totalFrames = state.objects[0].frames.length;
+            animationSlider.max = totalFrames;
             animationSlider.value = animationSlider.max;
 
             // Set current time to last
@@ -1024,7 +1032,6 @@ function updateAnimationTime(deltaTime) {
     const delta = deltaTime * animationSpeed;
     if (isReversed) {
         currentTime -= delta;
-        console.log("CURTIME2: ", currentTime);
         if (currentTime < 0) {
             if (autoReplayButton.checked) {
                 currentTime += totalAnimationTime;
