@@ -970,7 +970,8 @@ animationSlider.addEventListener('input', function() {
 reverseToggle.addEventListener('change', function() {
     isReversed = reverseToggle.checked;
     if (isReversed) {
-        animationSlider.value = totalFrames - 1;
+        // Bring slider point to the right
+        animationSlider.value = animationSlider.max;
         currentTime = (totalFrames - 1) / desiredFPS;
     } else {
         animationSlider.value = 0;
@@ -987,8 +988,12 @@ function toggleAnimation() {
     if (!animationPaused) {
         lastFrameTime = performance.now(); // reset frame time on start
         if (isReversed) {
-            animationSlider.value = totalFrames - 1;
-            currentTime = (totalFrames - 1) / desiredFPS;
+            // Update total frames
+            totalFrames = state.objects[0].frames.length;
+            animationSlider.value = animationSlider.max;
+
+            // Set current time to last
+            currentTime = (totalFrames - 1);
         }
         animate();
         playPauseButton.textContent = "Pause Animation";
@@ -1003,6 +1008,7 @@ function updateAnimationTime(deltaTime) {
     const delta = deltaTime * animationSpeed;
     if (isReversed) {
         currentTime -= delta;
+        console.log("CURTIME2: ", currentTime);
         if (currentTime < 0) {
             if (autoReplayButton.checked) {
                 currentTime += totalAnimationTime;
