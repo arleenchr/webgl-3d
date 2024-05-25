@@ -946,7 +946,8 @@ let hollowModel = ["pyramid", "octahedron", "tube"];
 let articulatedModel = ["cube", "wolf", "duck", "goat"];
 
 animationSlider.addEventListener('input', function() {
-    currentTime = animationSlider.value / desiredFPS;
+    currentTime = animationSlider.value;
+    totalAnimationTime = animationSlider.max;
     
     let interpolatedFrame;
 
@@ -957,9 +958,9 @@ animationSlider.addEventListener('input', function() {
         applyTransformations(interpolatedFrame);
     } else {
         interpolatedFrame = interpolateArticulatedFrames(state.objects[0].frames, currentTime);
-        console.log(interpolatedFrame)
-        // applyAnimationToArticulatedModel(state.objects[0])
-        applyTransformationsArticulated(interpolatedFrame)
+        applyAnimationToArticulatedModel(state.objects[0]);
+        applyTransformationsArticulated(interpolatedFrame);
+        renderModel();
     }
 
     if (!animationPaused) {
@@ -986,7 +987,7 @@ reverseToggle.addEventListener('change', function() {
     if (isReversed) {
         // Bring slider point to the right
         animationSlider.value = state.objects[0].frames.length;
-        currentTime = (totalFrames - 1) / desiredFPS;
+        currentTime = (totalFrames - 1);
     } else {
         animationSlider.value = 0;
         currentTime = 0;
@@ -1007,6 +1008,8 @@ function toggleAnimation() {
 
             // Set current time to last
             currentTime = (totalFrames - 1);
+        } else {
+            animationSlider.value = lastFrameTime;
         }
         animate();
         playPauseButton.textContent = "Pause Animation";
@@ -1030,6 +1033,8 @@ function updateAnimationTime(deltaTime) {
                 animationPaused = true;
                 playPauseButton.textContent = "Play Animation";
             }
+        } else if (currentTime >= totalAnimationTime) {
+            animationPaused = true;
         }
     } else {
         currentTime += delta;
@@ -1149,15 +1154,16 @@ function interpolateArticulatedFrames(frames, currentTime) {
 function applyTransformationsArticulated(animationData) {
     if (!animationData) return;
 
+    // Because the animation data itself is already processed (don't need to divide by anything)
     state.objects[0].translate = [
-        animationData.translate[0] / 100,
-        animationData.translate[1] / 100,
-        animationData.translate[2] / 100
+        animationData.translate[0],
+        animationData.translate[1],
+        animationData.translate[2]
     ];
     state.objects[0].rotate = [
-        animationData.rotate[0] * Math.PI / 100,
-        animationData.rotate[1] * Math.PI / 100,
-        animationData.rotate[2] * Math.PI / 100
+        animationData.rotate[0],
+        animationData.rotate[1],
+        animationData.rotate[2]
     ]
     state.objects[0].scale = animationData.scale;
     renderModel();
