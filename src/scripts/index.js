@@ -969,16 +969,29 @@ animationSlider.addEventListener('input', function() {
 
 reverseToggle.addEventListener('change', function() {
     isReversed = reverseToggle.checked;
+
+    let interpolatedFrame;
+
+    // Hollow Model
+    if (hollowModel.includes(state.objects[0].name)) {
+        interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
+        applyTransformations(interpolatedFrame);
+    } 
+    // Articulated Model
+    else { 
+        interpolatedFrame = interpolateArticulatedFrames(state.objects[0].frames, currentTime);
+        applyTransformationsArticulated(interpolatedFrame);
+    }
+
     if (isReversed) {
         // Bring slider point to the right
-        animationSlider.value = animationSlider.max;
+        animationSlider.value = state.objects[0].frames.length;
         currentTime = (totalFrames - 1) / desiredFPS;
     } else {
         animationSlider.value = 0;
         currentTime = 0;
     }
-    const interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
-    applyTransformations(interpolatedFrame);
+
     renderModel();
     console.log('Reverse animation:', isReversed);
 });
