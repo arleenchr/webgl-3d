@@ -81,6 +81,19 @@ void main() {
 }
 `;
 
+const fragment_shader_texture = `
+precision mediump float;
+
+varying vec2 vTextureCoord;
+
+uniform sampler2D uTexture;
+
+void main(void) {
+    gl_FragColor = texture2D(uTexture, vTextureCoord);
+}
+`;
+
+
 var canvas = document.querySelector("#gl-canvas")
 var gl = canvas.getContext("webgl")
 
