@@ -351,6 +351,7 @@
 }
 .play-pause-button{
     background-color: #189ee6;
+    width: 125px;
     border: none;
     color: white;
     border-radius: 5px;
