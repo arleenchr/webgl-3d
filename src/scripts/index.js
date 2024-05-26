@@ -790,6 +790,7 @@ animationSlider.addEventListener('input', function() {
 
     // Pause Animation
     animationPaused = true;
+    playPauseButton.textContent = "Play Animation";
     
     let interpolatedFrame;
 
