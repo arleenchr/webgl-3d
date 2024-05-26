@@ -286,6 +286,7 @@ create3dModel(pyramidContent, pyramidVertices);
 const pyramid = new Object();
 pyramid.name = 'pyramid';
 pyramid.model = pyramidContent;
+pyramid.frames = hollowAnim.frames;
 
 var pyramidObject = [
     pyramid,

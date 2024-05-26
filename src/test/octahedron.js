@@ -409,6 +409,7 @@ create3dModel(octahedronContent, octahedronVertices);
 const octahedron = new Object();
 octahedron.name = 'octahedron';
 octahedron.model = octahedronContent;
+octahedron.frames = hollowAnim.frames;
 
 var octahedronObject = [
     octahedron,

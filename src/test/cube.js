@@ -215,6 +215,7 @@ let cubeContent = {
 const cube = new Object();
 cube.name = 'cube';
 cube.model = cubeContent;
+cube.frames = hollowAnim.frames;
 
 var endObject = [
     cube,

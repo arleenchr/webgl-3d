@@ -71,6 +71,7 @@ create3dModel(tubeContent, tubeVertices);
 const tube = new Object();
 tube.name = 'tube';
 tube.model = tubeContent;
+tube.frames = hollowAnim.frames;
 
 var tubeObject = [
     tube,
