@@ -36,7 +36,6 @@ function generateFrame(firstFrame, lastFrame, frameRate) {
                 scale: vectors.addVecs(firstFrame.scale, vectors.scaleVecs(delta_scale, t)),
             }
         );
-        console.log(frames);    
     }
 
     frames.push(lastFrame);

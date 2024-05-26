@@ -87,9 +87,6 @@ const renderObject = (objects) => {
         
         // Set up the projection matrix
         const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
-        
-        console.log("View: ", view);
-        console.log("Projection: ", projection);
 
         // Set the transformation matrix uniform
         const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
@@ -104,12 +101,10 @@ const renderObject = (objects) => {
         let modelMatrix = matrices.multiply(view, transform);
         let nMatrix = matrices.inverse(modelMatrix);
         nMatrix = matrices.transpose(nMatrix);
-        console.log("ini n matrixxxx",nMatrix)
         gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
         
         // Set material of model
         if(state.material == "Basic"){
-            console.log("light ambient, material ambient", state.lightAmbient, state.materialAmbient)
             setColor(gl, obj.model);
             const vertColor = gl.getAttribLocation(program, "aColor");
             gl.enableVertexAttribArray(vertColor);
@@ -122,8 +117,6 @@ const renderObject = (objects) => {
             gl.uniform4fv(materialAmbient, state.materialAmbient);
         }
         else if(state.material == "Phong"){
-            console.log("ini phonggggg")
-
             setColor(gl, obj.model);
             const vertColor = gl.getAttribLocation(program, "aColor");
             gl.enableVertexAttribArray(vertColor);
@@ -177,102 +170,8 @@ const renderModel = () => {
     if (state.objects.length != 0 && state.objects[0].translate && state.objects[0].rotate && state.objects[0].scale) {
         state.objects[0].computeWorldMatrix();
     }
-    console.log("OBJ: ", state.objects);
     renderObject(state.objects);
-    console.log(state);
-    
 }
-
-// const renderModel2 = () => {
-//     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-//     // Clear canvas first
-//     gl.clearColor(1.0, 1.0, 1.0, 1.0);
-//     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-//     // Enable face culling
-//     gl.enable(gl.CULL_FACE);
-
-//     // Enable depth testing
-//     gl.enable(gl.DEPTH_TEST); 
-
-//     gl.useProgram(program);
-
-//     const view = setViewMat(state.viewMatrix);
-
-//     // Set up the geometry of the object
-//     const geometry = setObjGeometry(gl, state.model, view); 
-
-//     // Set up the transformation matrix
-//     const transform = setTransformMat(state.model, state.transform);
-
-//     // Set up the projection matrix
-//     const projection = setProjectionMat(state.projection, state.viewMatrix.far, state.viewMatrix.near, state.theta, state.phi, state.radius);
-
-//     console.log("View: ", view);
-//     console.log("Projection: ", projection);
-//     // Set the transformation matrix uniform
-//     const uTransform = gl.getUniformLocation(program, "uTransformationMatrix");
-//     gl.uniformMatrix4fv(uTransform, false, transform);
-
-//     // Set the projection matrix uniform
-//     const uProject = gl.getUniformLocation(program, "uProjectionMatrix");
-//     gl.uniformMatrix4fv(uProject, false, matrices.multiply(projection, view));
-
-
-//     // Calculate normal matrix
-//     var normalMatrix = gl.getUniformLocation(program, "uNormalMatrix");
-//     let modelMatrix = matrices.multiply(view, transform);
-//     let nMatrix = matrices.inverse(modelMatrix);
-//     nMatrix = matrices.transpose(nMatrix);
-
-//     gl.uniformMatrix4fv(normalMatrix, false, nMatrix);
-
-//     // Set material of model
-//     if(state.material == "Basic"){
-//         setColor(gl, state.model);
-//         const vertColor = gl.getAttribLocation(program, "aColor");
-//         gl.enableVertexAttribArray(vertColor);
-//         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
-
-//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-//         gl.uniform4fv(lightAmbient, state.lightAmbient);
-
-//         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
-//         gl.uniform4fv(materialAmbient, state.materialAmbient);
-//     }
-//     else if(state.material == "Phong"){
-//         console.log("ini phonggggg")
-
-//         setColor(gl, state.model);
-//         const vertColor = gl.getAttribLocation(program, "aColor");
-//         gl.enableVertexAttribArray(vertColor);
-//         gl.vertexAttribPointer(vertColor, 3, gl.FLOAT, false, 0, 0);
-
-//         var lightDirection = gl.getUniformLocation(program, "uLightDirection");
-//         gl.uniform3fv(lightDirection, [-1,1,-1]);
-        
-//         var lightDiffuse = gl.getUniformLocation(program, "uLightDiffuse");
-//         gl.uniform4fv(lightDiffuse, [1,1,1,1]);
-        
-//         var lightAmbient = gl.getUniformLocation(program, "uLightAmbient");
-//         gl.uniform4fv(lightAmbient, state.lightAmbient);
-
-//         var lightSpecular = gl.getUniformLocation(program, "uLightSpecular");
-//         gl.uniform4fv(lightSpecular, [1,1,1,1]);
-        
-//         var materialAmbient = gl.getUniformLocation(program, "uMaterialAmbient");
-//         gl.uniform4fv(materialAmbient, state.materialAmbient);
-
-//         var materialSpecular = gl.getUniformLocation(program, "uMaterialSpecular");
-//         gl.uniform4fv(materialSpecular, state.materialSpecular);
-
-//         var shininess = gl.getUniformLocation(program, "shininess");
-//         gl.uniform1f(shininess, state.shine);
-//     }
-
-//     gl.drawElements(gl.TRIANGLES, geometry.lenFaces, gl.UNSIGNED_SHORT, 0);
-// }
 
 document.addEventListener("DOMContentLoaded", () => {
     const selectModelContainer = document.querySelector(".select-model-container");
@@ -286,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // For Model Loading
     selectButton.addEventListener("click", () => {
-        console.log("kepencet")
         selectModelContainer.classList.toggle("active");
     });
 
@@ -346,64 +244,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // TODO: Implement Logic for Maps
             if (selectedOption === "Texture 1") {
-                console.log(selectedOption);
+                // console.log(selectedOption);
             } else if (selectedOption === "Texture 2") {
-                console.log(selectedOption);
+                // console.log(selectedOption);
             } else if (selectedOption === "Texture 3") {
-                console.log(selectedOption);
+                // console.log(selectedOption);
             }
         })
     })
 });
-
-
-// Input model from JSON file
-// modelInput.addEventListener("change", () => {
-//     const file = modelInput.files[0];
-
-//     // Check file extension
-//     if (file.type !== "application/json") {
-//         alert("Wrong file extension! Please upload a file with JSON extension!");
-
-//         // Disable the color checkbox
-//         document.getElementById('color-button').disabled = true;
-//         return;
-//     }
-  
-//     // Read file
-//     const reader = new FileReader();
-//     reader.onload = (e) => {
-//         const text = e.target.result;
-//         const color = state.chosenColor;
-
-//         // Set initial state
-//         setInitialState();
-
-//         // Clear canvas first
-//         gl.clearColor(1.0, 1.0, 1.0, 1.0);
-//         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-//         // Load object
-//         let obj = new Object();
-//         obj = JSON.parse(text);
-//         state.objects = obj;
-
-//         console.log(state);
-
-//         state.chosenColor = color;
-//         state.selectedObject = state.objects[0];
-
-//         // Enable or disable the checkbox
-//         if (state.objects.length > 0) {
-//             document.getElementById('color-button').disabled = false;
-//         } else {
-//             document.getElementById('color-button').disabled = true;
-//         }
-
-//         renderModel();
-//     };
-//     reader.readAsText(file);    
-// });
 
 // Save colors and turn off the color (turn into greyish)
 const saveAndTurnOffColor = (object, path) => {
@@ -439,8 +288,6 @@ colorToggle.addEventListener("change", () => {
     if (colorToggle.checked) {
         if (state.savedColor != null) {
             restoreColors(state.objects[0], 'parent');
-        } else {
-            console.log("There are no saved colors");
         }
         renderModel();
     } else {
@@ -475,17 +322,13 @@ const setViewMat = (viewMat) => {
   
     // In 4x4 transformation matrix, indices 12, 13, 14 represent x, y, z
     let cameraPos = [cameraMat[12], cameraMat[13], cameraMat[14]];
-    console.log("Camera Position: ", cameraPos)
   
     let res = matrices.inverse(matrices.lookAt(cameraPos, [0, 0, 0], viewMat.up));
 
-    console.log("Result View Mat", res);
     return res;
 }
 
 const setObjGeometry = (gl, model) => {
-    console.log("Model", model);
-
     // Flatten to be used
     const vertices = new Float32Array(model?.vertices.flat(1));
 
@@ -622,8 +465,6 @@ function generateSceneGraph (models, level = 0){
             selectedComponent = graphComponent;
             state.focus = model;
             state.selectedObject = model;
-            console.log("select model")
-            console.log(state.selectedObject);
         });
         graphContainer.appendChild(graphComponent);
         if (model.children && model.children.length > 0) {
@@ -735,8 +576,6 @@ window.addEventListener('keydown', function(event) {
                     renderModel();
                 }
             } else {
-                console.log("Gravity Exists");
-
                 // Jumping
                 let time = 0;
                 let velocity = Math.sqrt(2 * gravity * jumpHeight);
@@ -767,9 +606,8 @@ window.addEventListener('keydown', function(event) {
                     state.objects[0].translate[1] = transY.value / 100;
                     renderModel();
                 }
-            } else {
-                console.log("Gravity Exists");
             }
+
             break;
         case "G": // Activate or Deactivate Gravity Feature
             gravityFeature = !gravityFeature;
@@ -781,7 +619,6 @@ window.addEventListener('keydown', function(event) {
 materialRadio.forEach((radio) => {
     radio.addEventListener('change', () => {
         state.material = radio.value;
-        console.log("Material: ", state.material);
         if(state.material == "Basic"){
 
             lightAmbient.disabled=false;
@@ -827,7 +664,6 @@ materialAmbient.addEventListener('input', () => {
 
 /* Change Material Specualr */
 materialSpecular.addEventListener('input', () => {
-    console.log("ganti material specular ", materialSpecular.value)
     state.materialSpecular = [parseFloat(materialSpecular.value), parseFloat(materialSpecular.value), parseFloat(materialSpecular.value), 1.0];
     renderModel();
 })
@@ -944,16 +780,18 @@ fpsInput.addEventListener('input', function() {
     playPauseButton.textContent = "Play Animation";
 });
 
-let hollowModel = ["pyramid", "octahedron", "tube"];
-let articulatedModel = ["cube", "wolf", "duck", "goat"];
+let hollowModel = ["pyramid", "octahedron", "tube", "cube"];
+let articulatedModel = ["wolf", "duck", "goat", "perry"];
 
 animationSlider.addEventListener('input', function() {
     currentTime = animationSlider.value;
+    animationSlider.max = state.objects[0].frames.length;
     totalAnimationTime = animationSlider.max;
+
+    // Pause Animation
+    animationPaused = true;
     
     let interpolatedFrame;
-
-    console.log(state.objects[0])
 
     if (hollowModel.includes(state.objects[0].name)) {
         interpolatedFrame = interpolateKeyframes(hollowAnim.frames, currentTime);
@@ -996,15 +834,14 @@ reverseToggle.addEventListener('change', function() {
     }
 
     renderModel();
-    console.log('Reverse animation:', isReversed);
 });
 
 function toggleAnimation() {
     if (isFPSChanged) {
-        console.log("CHANGED");
         animationPaused = true;
         isFPSChanged = false;
     }
+
     animationPaused = !animationPaused;
     if (!animationPaused) {
         lastFrameTime = performance.now(); // reset frame time on start
@@ -1016,15 +853,11 @@ function toggleAnimation() {
 
             // Set current time to last
             currentTime = (totalFrames - 1);
-        } else {
-            animationSlider.value = lastFrameTime;
         }
         animate();
         playPauseButton.textContent = "Pause Animation";
-        console.log("playing animation");
     } else {
         playPauseButton.textContent = "Play Animation";
-        console.log("pausing animation");
     }
 }
 
@@ -1056,6 +889,10 @@ function updateAnimationTime(deltaTime) {
     }
 
     animationSlider.value = Math.floor((currentTime / totalAnimationTime) * totalFrames);
+    // console.log("Current Time: ", currentTime);
+    // console.log("Total Animation Time: ", totalAnimationTime);
+    // console.log("Total Frames: ", totalFrames);
+    // console.log("Slider Value: ", animationSlider.value);
 }
 
 function lerp(a, b, t) {
@@ -1120,8 +957,6 @@ function applyTransformations(animationData) {
     ]
     state.objects[0].scale = animationData.scale;
     renderModel();
-
-    console.log("transformation applied!")
 }
 
 function interpolateArticulatedFrames(frames, currentTime) {
@@ -1174,12 +1009,9 @@ function applyTransformationsArticulated(animationData) {
     ]
     state.objects[0].scale = animationData.scale;
     renderModel();
-
-    console.log("transformation applied!")
 }
 
 function applyAnimationToArticulatedModel(object) {
-    // console.log(object.frames.length);
     if (object.frames.length != 0) {
         const interpolatedFrame = interpolateArticulatedFrames(object.frames, currentTime);
 
