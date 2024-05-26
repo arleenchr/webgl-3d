@@ -9,12 +9,12 @@ var Object = function () {
 }
 
 Object.prototype.setParent = function (parent) {
-    if (this.parent) {
-        var ndx = this.parent.children.indexOf(this);
-        if (ndx >= 0) {
-          this.parent.children.splice(ndx, 1);
-        }
-    }
+    // if (this.parent) {
+    //     var ndx = this.parent.children.indexOf(this);
+    //     if (ndx >= 0) {
+    //       this.parent.children.splice(ndx, 1);
+    //     }
+    // }
     if (parent) {
         parent.children.push(this);
     }
