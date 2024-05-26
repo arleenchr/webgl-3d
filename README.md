@@ -52,7 +52,6 @@ Tugas Besar II IF3260 Grafika Komputer
 | NIM       | Nama                      | Pembagian Kerja   |
 | --------- | -------                   | -----             |
 | 13521059  | Arleen Chrysantha Gunardi | Model octahedron <br> Model wolf + animation <br> UI <br> Transformation <br> Animation controller <br> Tweening animation |
-| 13521064  | Bill Clinton              | Model pyramid <br> Model duck + animation <br> Create model <br> Vertex Color <br> Simple object controller |
+| 13521064  | Bill Clinton              | Model pyramid <br> Model duck + animation <br> Create model <br> Vertex Color <br> Simple object controller <br> Dokumen panduan |
 | 13521078  | Christian Albert Hasiholan| Model cube <br> Model perry + animation <br> Kamera <br> Load model <br> Scene graph <br> Component editor |
-| 13521099  | Vieri Fajar Firdaus       | Model tube <br> Model goat + animation <br> Material & texture |
-
+| 13521099  | Vieri Fajar Firdaus       | Model tube <br> Model goat + animation <br> Material & texture <br> Dokumen panduan |
