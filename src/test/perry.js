@@ -6,6 +6,7 @@ const perryBackFeetColor = [252 / 255, 178 / 255, 57 / 255];
 const perryTailColor = [249 / 255, 165 / 255, 99 / 255];
 const perryEyeColor = [1, 1, 1];
 const perryPupilColor = [110 / 255, 56 / 255, 37 / 255];
+const perryHatColor = [86 / 255, 43 / 255, 53 / 255];
 
 const perry = new Object();
 perry.name = 'perry';
@@ -32,6 +33,36 @@ perry.animation = [
         rotate: [Math.PI/10, Math.PI*3/10, 0],
         scale: [1, 1, 1],
     },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/10, Math.PI*3/10, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/10, Math.PI*3/10, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/10, Math.PI*3/10, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [Math.PI/10, Math.PI*3/10, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [-0.15707963267948966, 1.5707963267948966, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [-0.15707963267948966, Math.PI*5/2, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(perry);
 
@@ -43,6 +74,7 @@ perryBody.setParent(perry);
 
 perryBody.animation = [
     still,
+    still,
     {
         translate: [0, 0, 0],
         rotate: [0, 0, 0],
@@ -53,7 +85,36 @@ perryBody.animation = [
         rotate: [0, 0, -Math.PI/2],
         scale: [1.4, 0.4, 1],
     },
-    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, -Math.PI/2],
+        scale: [1.4, 0.4, 1],
+    },
 ]
 addFramesToObject(perryBody);
 
@@ -65,6 +126,47 @@ perryHead.setParent(perry);
 
 perryHead.animation = [
     still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
+    {
+        translate: [0.95, 0.65, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 0.8, 0.8],
+    },
 ]
 addFramesToObject(perryHead);
 
@@ -87,6 +189,51 @@ perryLeftPupil.setParent(perryLeftEye);
 
 perryLeftPupil.animation = [
     still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, -0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(perryLeftPupil);
 
@@ -109,6 +256,51 @@ perryRightPupil.setParent(perryRightEye);
 
 perryRightPupil.animation = [
     still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0.06],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
 ]
 addFramesToObject(perryRightPupil);
 
@@ -120,6 +312,47 @@ perryTail.setParent(perry);
 
 perryTail.animation = [
     still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
+    {
+        translate: [-0.45, -0.35, 0],
+        rotate: [0, 0, -0.4712388980384689],
+        scale: [1, 0.6, 1],
+    },
 ]
 addFramesToObject(perryTail);
 
@@ -131,6 +364,43 @@ perryFrontLeftLeg.setParent(perryBody);
 
 perryFrontLeftLeg.animation = [
     still,
+    still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, 0.025],
+        rotate: [0, -0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
 ]
 addFramesToObject(perryFrontLeftLeg);
 
@@ -153,6 +423,43 @@ perryFrontRightLeg.setParent(perryBody);
 
 perryFrontRightLeg.animation = [
     still,
+    still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
+    {
+        translate: [0.8, -0.45, -0.025],
+        rotate: [0, 0.15707963267948966, 1.2566370614359172],
+        scale: [1.8, 1.2, 1.4],
+    },
 ]
 addFramesToObject(perryFrontRightLeg);
 
@@ -175,6 +482,43 @@ perryBackLeftLeg.setParent(perryBody);
 
 perryBackLeftLeg.animation = [
     still,
+    still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/4],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.5, 0.1, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
 ]
 addFramesToObject(perryBackLeftLeg);
 
@@ -197,6 +541,43 @@ perryBackRightLeg.setParent(perryBody);
 
 perryBackRightLeg.animation = [
     still,
+    still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, Math.PI/4],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-0.5, 0.1, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
+    {
+        translate: [-1, 0.2, 0],
+        rotate: [0, 0, Math.PI/2],
+        scale: [3, 1, 1],
+    },
 ]
 addFramesToObject(perryBackRightLeg);
 
@@ -221,6 +602,57 @@ perryBeak.animation = [
     still,
 ]
 addFramesToObject(perryBeak);
+
+const perryHat = new Object();
+perryHat.name = 'perryHat';
+perryHat.model = generateCuboid(0.4, 0.325, 0.375, [0.05, 3, 0]);
+setSolidColor(perryHat.model, perryHatColor);
+perryHat.setParent(perry);
+
+perryHat.animation = [
+    still,
+    still,
+    still,
+    still,
+    still,
+    {
+        translate: [0, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1.6, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1.6, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1.6, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+    {
+        translate: [-1.6, 0, 0],
+        rotate: [0, 0, 0],
+        scale: [1, 1, 1],
+    },
+]
+addFramesToObject(perryHat);
+
+const perryHatBottom = new Object();
+perryHatBottom.name = 'perryHatBottom';
+perryHatBottom.model = generateCuboid(0.1, 0.45, 0.55, [0.05, 2.85, 0]);
+setSolidColor(perryHatBottom.model, perryHatColor);
+perryHatBottom.setParent(perryHat);
+
+perryHatBottom.animation = [
+    still,
+]
+addFramesToObject(perryHatBottom);
 
 
 var perryObject = [
