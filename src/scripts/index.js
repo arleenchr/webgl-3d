@@ -822,13 +822,19 @@ reverseToggle.addEventListener('change', function() {
     // Articulated Model
     else { 
         interpolatedFrame = interpolateArticulatedFrames(state.objects[0].frames, currentTime);
+        applyAnimationToArticulatedModel(state.objects[0]);
         applyTransformationsArticulated(interpolatedFrame);
     }
 
     if (isReversed) {
         // Bring slider point to the right
         animationSlider.value = state.objects[0].frames.length;
-        currentTime = (totalFrames - 1);
+        if (hollowModel.includes(state.objects[0].name)) {
+            currentTime = (totalFrames - 1) / desiredFPS;
+        } else {
+            currentTime = (totalFrames - 1);
+        }
+        console.log("current time: ", currentTime);
     } else {
         animationSlider.value = 0;
         currentTime = 0;
@@ -853,7 +859,11 @@ function toggleAnimation() {
             animationSlider.value = animationSlider.max;
 
             // Set current time to last
-            currentTime = (totalFrames - 1);
+            if (hollowModel.includes(state.objects[0].name)) {
+                currentTime = (totalFrames - 1) / desiredFPS;
+            } else {
+                currentTime = (totalFrames - 1);
+            }
         }
         animate();
         playPauseButton.textContent = "Pause Animation";
